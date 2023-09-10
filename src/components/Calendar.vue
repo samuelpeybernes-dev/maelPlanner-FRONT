@@ -7,7 +7,7 @@ import { DayPilot, DayPilotCalendar } from '@daypilot/daypilot-lite-vue'
 
 export default {
   name: 'Calendar',
-  data: function () {
+  data() {
     return {
       config: {
         locale: 'fr-fr',
@@ -15,7 +15,7 @@ export default {
         theme: 'maeltheme',
         businessBeginsHour: 7,
         businessEndsHour: 23,
-        headerDateFormat: 'ddd M/d/yyyy',
+        headerDateFormat: 'ddd d/M/yyyy',
         timeRangeSelectedHandling: 'Enabled',
         onTimeRangeSelected: async args => {
           const modal = await DayPilot.Modal.prompt('Ajouter horraires décathlon:', 'Décathlon')
@@ -47,7 +47,12 @@ export default {
       },
     }
   },
-  props: {},
+
+  props: {
+  scheduleJobs: {
+    type: Array,
+    },
+  },
   components: {
     DayPilotCalendar,
   },
@@ -109,7 +114,8 @@ export default {
           borderColor: '#a8a8a8',
         },
       ]
-      this.calendar.update({ events })
+      this.calendar.update( this.scheduleJobs )
+      console.log("🚀 ~ file: Calendar.vue:118 ~ loadEvents ~ scheduleJobs:", this.scheduleJobs)
     },
   },
   mounted: function () {

@@ -28,6 +28,4 @@ npm run dev
 npm run build
 ```
 
-bdd : maelPlanner
-password : sam30127
 
