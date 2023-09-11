@@ -5,11 +5,12 @@ export const scheduleJob = defineStore("scheduleJob",{
     state: () => ({
         scheduleJob: [
             {
-              id: 4,
+              id: "4",
               start: "2023-09-04T06:00:00.000Z",
               end: "2023-09-04T06:00:00.000Z",
               text: "decathlon",
-
+              backColor: "",
+              borderColor: "",
             },
           ],
     }),
@@ -32,15 +33,22 @@ export const scheduleJob = defineStore("scheduleJob",{
         const body = {
           scheduleJobJoi: {
             id: scheduleJob.id,
-            start: scheduleJob.start,
-            end: scheduleJob.end,
-            text: scheduleJob.text,
-            backColor: scheduleJob.backColor,
-            borderColor: scheduleJob.borderColor
+            newStart: scheduleJob.start,
+            newEnd: scheduleJob.end,
+            newText: scheduleJob.text,
           },
         }
-    
         axios.post(`http://127.0.0.1:1631/api/v1/scheduleJob/postSchedule`, body)
       },
+
+      deleteScheduleJob(scheduleJobId) {
+        try {
+          axios.delete(`http://127.0.0.1:1631/api/v1/scheduleJob/deleteSchedule?id=${scheduleJobId}`)
+          }
+          catch (error) {
+            alert(error)
+            console.log(error) 
+      }
     },
+  },
 })

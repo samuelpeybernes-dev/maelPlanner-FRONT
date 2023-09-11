@@ -7,6 +7,7 @@ import { DayPilot, DayPilotCalendar } from '@daypilot/daypilot-lite-vue'
 import { scheduleJob } from "../store/scheduleJob";
 export default {
   name: 'Calendar',
+  
   data() {
     return {
       config: {
@@ -30,8 +31,6 @@ export default {
             id: DayPilot.guid(),
             text: modal.result,
           }
-        
-        console.log("🚀 ~ file: Calendar.vue:31 ~ data ~ id:", newEvent.id)
 
           dp.events.add(newEvent)
           const store = scheduleJob();
@@ -39,14 +38,32 @@ export default {
         },
         eventDeleteHandling: 'Update',
         onEventDeleted: args => {
+          const store = scheduleJob();
+          store.deleteScheduleJob(args.e.id())
           console.log('Horraire suprimmé: ' + args.e.text())
         },
         eventMoveHandling: 'Update',
-        onEventMoved: args => {
+        onEventMoved: async args => { 
+          const updatedEvent = {
+            start: args.newStart,
+            end: args.newEnd,
+            text: args.e.text(),
+            id: args.e.id(),
+          }
+          const store = scheduleJob();
+          store.postScheduleJob(updatedEvent)
           console.log('Event moved: ' + args.e.text())
         },
-        eventResizeHandling: 'Update',
+        eventResizeHandling: 'Update',  
         onEventResized: args => {
+          const updatedEvent = {
+            start: args.newStart,
+            end: args.newEnd,
+            text: args.e.text(),
+            id: args.e.id(),
+          }
+          const store = scheduleJob();
+          store.postScheduleJob(updatedEvent)
           console.log('Event resized: ' + args.e.text())
         },
         eventClickHandling: 'Disabled',
@@ -70,60 +87,8 @@ export default {
   },
   methods: { 
     loadEvents() {  
-    
       const events = this.events
-      const eventss = [   
-        {
-          id: 1,
-          start: '2023-09-12T11:00:00',
-          end: '2023-09-12T12:30:00',
-          text: 'Eco-gestion',
-          backColor: '#e2b172',
-          borderColor: '#e2b172',
-        },
-        {
-          id: 2,
-          start: '2023-09-12T11:00:00',
-          end: '2023-09-12T12:30:00',
-          text: 'Eco-gestion',
-          backColor: '#e2b172',
-          borderColor: '#e2b172',
-        },
-        {
-          id: 3,
-          start: '2023-09-12T13:00:00',
-          end: '2023-09-12T16:00:00',
-          text: 'Nutri-Ali',
-          backColor: '#479bd3',
-          borderColor: '#479bd3',
-        },
-        {
-          id: 4,
-          start: '2023-09-12T16:00:00',
-          end: '2023-09-12T18:00:00',
-          text: 'ATA',
-          backColor: '#f56e6e',
-          borderColor: '#f56e6e',
-        },
-        {
-          id: 5,
-          start: '2023-09-12T18:30:00',
-          end: '2023-09-12T20:15:00',
-          text: 'COURSES',
-          backColor: '#bad6f7',
-          borderColor: '#bad6f7',
-        },
-        {
-          id: 6,
-          start: '2023-09-12T21:15:00',
-          end: '2023-09-12T22:30:00',
-          text: 'FICHES',
-          backColor: '#a8a8a8',
-          borderColor: '#a8a8a8',
-        },
-      ]
       this.calendar.update( {events} ) 
-  
     },
   }, 
   mounted: function () {

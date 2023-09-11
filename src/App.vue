@@ -21,14 +21,12 @@ export default {
       const storedData = localStorage.getItem('scheduleJobs');
       return storedData ? JSON.parse(storedData) : store.scheduleJob;
     });
- 
+  
     onMounted(async () => {   
       await store.fetchScheduleJob();
       localStorage.setItem('scheduleJobs', JSON.stringify(store.scheduleJob));
       });   
       
-      
-
       return {
       scheduleJobs,
       
