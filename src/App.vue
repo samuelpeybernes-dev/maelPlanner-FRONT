@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Calendar :scheduleJobs="scheduleJobs"/>
+    <Calendar :events="scheduleJobs"/>
   </div>
 </template>
 
@@ -13,22 +13,28 @@ export default {
   components: {
       Calendar,
     },
+    
   setup(){
     const store = scheduleJob();
 
     const scheduleJobs = computed(() => {
-      return store.scheduleJob.scheduleJob;
+      const storedData = localStorage.getItem('scheduleJobs');
+      return storedData ? JSON.parse(storedData) : store.scheduleJob;
     });
-
-    onMounted(() => {
-      store.fetchScheduleJob();
-      });
+ 
+    onMounted(async () => {   
+      await store.fetchScheduleJob();
+      localStorage.setItem('scheduleJobs', JSON.stringify(store.scheduleJob));
+      });   
+      
+      
 
       return {
       scheduleJobs,
       
     };
   }
+   
 }
 
 

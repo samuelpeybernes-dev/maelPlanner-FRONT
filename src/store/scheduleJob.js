@@ -9,8 +9,7 @@ export const scheduleJob = defineStore("scheduleJob",{
               start: "2023-09-04T06:00:00.000Z",
               end: "2023-09-04T06:00:00.000Z",
               text: "decathlon",
-              backColor: "testb",
-              borderColor: "aaaa"
+
             },
           ],
     }),
@@ -20,36 +19,28 @@ export const scheduleJob = defineStore("scheduleJob",{
     actions: {
       async fetchScheduleJob() {
         try {
-            const { data } = await axios.get(`http://127.0.0.1:1631/api/v1/scheduleJob/getSchedule?id=1`)
-            this.scheduleJob = data
-           
+            const { data } = await axios.get(`http://127.0.0.1:1631/api/v1/scheduleJob/getSchedule`)
+            this.scheduleJob = data.scheduleJob           
           }
           catch (error) {
             alert(error)
-            console.log(error)
+            console.log(error) 
         }
       },
 
-      postProjectNotePersonalization({ commit, state }, ProjectNotesPersonalization) {
-        commit('POST_PROJECT_NOTE_PERSO', ProjectNotesPersonalization)
-        // Met à jour les légendes dans le state
-        const updatedPriority = {
-          priorityId: ProjectNotesPersonalization.priorityId,
-          label: ProjectNotesPersonalization.newLabel,
-          color: state.defaultPriorities[ProjectNotesPersonalization.priorityId].color,
-        }
-        commit('UPDATE_PRIORITY', updatedPriority)
-        // Met à jour les légendes dans la bdd
+      postScheduleJob(scheduleJob) {
         const body = {
-          ProjectNotesPersonalizationJoi: {
-            empUsername: ProjectNotesPersonalization.empUsername,
-            priorityId: state.defaultPriorities[ProjectNotesPersonalization.priorityId].priorityId,
-            newLabel: ProjectNotesPersonalization.newLabel,
-            newColor: state.defaultPriorities[ProjectNotesPersonalization.priorityId].color,
+          scheduleJobJoi: {
+            id: scheduleJob.id,
+            start: scheduleJob.start,
+            end: scheduleJob.end,
+            text: scheduleJob.text,
+            backColor: scheduleJob.backColor,
+            borderColor: scheduleJob.borderColor
           },
         }
     
-        this.$axios.post(`/bagdad/projectNotes/postLabel`, body)
+        axios.post(`http://127.0.0.1:1631/api/v1/scheduleJob/postSchedule`, body)
       },
     },
 })

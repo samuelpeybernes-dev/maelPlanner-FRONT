@@ -4,7 +4,7 @@
 
 <script>
 import { DayPilot, DayPilotCalendar } from '@daypilot/daypilot-lite-vue'
-
+import { scheduleJob } from "../store/scheduleJob";
 export default {
   name: 'Calendar',
   data() {
@@ -24,12 +24,18 @@ export default {
           if (modal.canceled) {
             return
           }
-          dp.events.add({
+          const newEvent = {
             start: args.start,
             end: args.end,
             id: DayPilot.guid(),
             text: modal.result,
-          })
+          }
+        
+        console.log("🚀 ~ file: Calendar.vue:31 ~ data ~ id:", newEvent.id)
+
+          dp.events.add(newEvent)
+          const store = scheduleJob();
+          store.postScheduleJob(newEvent)
         },
         eventDeleteHandling: 'Update',
         onEventDeleted: args => {
@@ -49,7 +55,7 @@ export default {
   },
 
   props: {
-  scheduleJobs: {
+    events: {
     type: Array,
     },
   },
@@ -62,67 +68,72 @@ export default {
       return this.$refs.calendar.control
     },
   },
-  methods: {
-    loadEvents() {
-      const events = [
+  methods: { 
+    loadEvents() {  
+    
+      const events = this.events
+      const eventss = [   
         {
           id: 1,
-          start: '2023-09-04T08:00:00',
-          end: '2023-09-04T11:00:00',
-          text: 'Biochimie ',
-          backColor: '#fac4fa',
-          borderColor: '#fac4fa',
+          start: '2023-09-12T11:00:00',
+          end: '2023-09-12T12:30:00',
+          text: 'Eco-gestion',
+          backColor: '#e2b172',
+          borderColor: '#e2b172',
         },
         {
           id: 2,
-          start: '2023-09-04T11:00:00',
-          end: '2023-09-04T12:30:00',
+          start: '2023-09-12T11:00:00',
+          end: '2023-09-12T12:30:00',
           text: 'Eco-gestion',
           backColor: '#e2b172',
           borderColor: '#e2b172',
         },
         {
           id: 3,
-          start: '2023-09-04T13:00:00',
-          end: '2023-09-04T16:00:00',
+          start: '2023-09-12T13:00:00',
+          end: '2023-09-12T16:00:00',
           text: 'Nutri-Ali',
           backColor: '#479bd3',
           borderColor: '#479bd3',
         },
         {
           id: 4,
-          start: '2023-09-04T16:00:00',
-          end: '2023-09-04T18:00:00',
+          start: '2023-09-12T16:00:00',
+          end: '2023-09-12T18:00:00',
           text: 'ATA',
           backColor: '#f56e6e',
           borderColor: '#f56e6e',
         },
         {
           id: 5,
-          start: '2023-09-04T18:30:00',
-          end: '2023-09-04T20:15:00',
+          start: '2023-09-12T18:30:00',
+          end: '2023-09-12T20:15:00',
           text: 'COURSES',
           backColor: '#bad6f7',
           borderColor: '#bad6f7',
         },
         {
           id: 6,
-          start: '2023-09-04T21:15:00',
-          end: '2023-09-04T22:30:00',
+          start: '2023-09-12T21:15:00',
+          end: '2023-09-12T22:30:00',
           text: 'FICHES',
           backColor: '#a8a8a8',
           borderColor: '#a8a8a8',
         },
       ]
-      this.calendar.update( this.scheduleJobs )
-      console.log("🚀 ~ file: Calendar.vue:118 ~ loadEvents ~ scheduleJobs:", this.scheduleJobs)
+      this.calendar.update( {events} ) 
+  
     },
-  },
+  }, 
   mounted: function () {
-    this.loadEvents()
+    this.loadEvents();
   },
+  
+ 
 }
+
 </script>
-<style>
+<style> 
 @import '../assets/maeltheme.css';
 </style>
