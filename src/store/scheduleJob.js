@@ -30,6 +30,7 @@ export const scheduleJob = defineStore("scheduleJob",{
       },
 
       postScheduleJob(scheduleJob) {
+        try {
         const body = {
           scheduleJobJoi: {
             id: scheduleJob.id,
@@ -39,6 +40,11 @@ export const scheduleJob = defineStore("scheduleJob",{
           },
         }
         axios.post(`http://127.0.0.1:1631/api/v1/scheduleJob/postSchedule`, body)
+      }
+        catch (error) {
+          alert(error)
+          console.log(error) 
+      }
       },
 
       deleteScheduleJob(scheduleJobId) {
