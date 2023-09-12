@@ -4,14 +4,7 @@ import axios from "axios"
 export const scheduleJob = defineStore("scheduleJob",{
     state: () => ({
         scheduleJob: [
-            {
-              id: "4",
-              start: "2023-09-04T06:00:00.000Z",
-              end: "2023-09-04T06:00:00.000Z",
-              text: "decathlon",
-              backColor: "",
-              borderColor: "",
-            },
+            
           ],
     }),
     getters: {
@@ -29,7 +22,7 @@ export const scheduleJob = defineStore("scheduleJob",{
         }
       },
 
-      postScheduleJob(scheduleJob) {
+      async postScheduleJob(scheduleJob) {
         try {
         const body = {
           scheduleJobJoi: {
@@ -39,7 +32,9 @@ export const scheduleJob = defineStore("scheduleJob",{
             newText: scheduleJob.text,
           },
         }
-        axios.post(`http://127.0.0.1:1631/api/v1/scheduleJob/postSchedule`, body)
+        await axios.post(`http://127.0.0.1:1631/api/v1/scheduleJob/postSchedule`, body)
+        this.scheduleJob = this.scheduleJob.filter((scheduleJob) => scheduleJob.id !== scheduleJob.id)
+        this.scheduleJob.push(scheduleJob)
       }
         catch (error) {
           alert(error)
@@ -47,9 +42,10 @@ export const scheduleJob = defineStore("scheduleJob",{
       }
       },
 
-      deleteScheduleJob(scheduleJobId) {
+      async deleteScheduleJob(scheduleJobId) {
         try {
           axios.delete(`http://127.0.0.1:1631/api/v1/scheduleJob/deleteSchedule?id=${scheduleJobId}`)
+          this.scheduleJob = this.scheduleJob.filter((scheduleJob) => scheduleJob.id !== scheduleJobId)
           }
           catch (error) {
             alert(error)
