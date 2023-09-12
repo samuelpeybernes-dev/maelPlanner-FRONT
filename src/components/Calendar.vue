@@ -4,12 +4,14 @@
 
 <script>
 import { DayPilot, DayPilotCalendar } from '@daypilot/daypilot-lite-vue'
-import { scheduleJob } from "../store/scheduleJob";
-import { onMounted } from "vue";
 export default {
   name: 'Calendar',
   props: {
     store: {
+      type: Object,
+      required: true,
+    },
+    classStore: {
       type: Object,
       required: true,
     },
@@ -32,10 +34,19 @@ export default {
         onEventDeleted: this.onEventDeleted,
         onEventMoved: this.onEventMoved,
         onEventResized: this.onEventResized,
+        onBeforeEventRender: this.onBeforeEventRender
       },
+      combinedEvents: [],
     };
   },
   methods: {
+    async onBeforeEventRender(args){
+      if (args.data.text !== 'Décathlon') {
+      args.data.deleteDisabled = true;
+      } else {
+        args.data.deleteDisabled = false;
+      }
+    },
     async onTimeRangeSelected(args) {
       const modal = await DayPilot.Modal.prompt('Ajouter horaires décathlon:', 'Décathlon');
       const dp = args.control;
@@ -53,8 +64,13 @@ export default {
       await this.store.postScheduleJob(newEvent);
     },
     async onEventDeleted(args) {
-      await this.store.deleteScheduleJob(args.e.id());
-      console.log('Horraire suprimmé: ' + args.e.text());
+      
+      if (args.e.text() === 'Décathlon') {
+        await this.store.deleteScheduleJob(args.e.id());
+        console.log('Horraire suprimmé: ' + args.e.text());
+      } else {
+        console.log('Cannot delete: ' + args.e.text());
+      }
     },
     async onEventMoved(args) {
       const updatedEvent = {
@@ -63,8 +79,11 @@ export default {
         text: args.e.text(),
         id: args.e.id(),
       };
-      await this.store.postScheduleJob(updatedEvent);
-      console.log('Event moved: ' + args.e.text());
+      if (args.e.text() === 'Décathlon') {
+        await this.store.postScheduleJob(updatedEvent);
+        console.log('Event moved: ' + args.e.text());
+      } else {
+      }
     },
     async onEventResized(args) {
       const updatedEvent = {
@@ -73,19 +92,32 @@ export default {
         text: args.e.text(),
         id: args.e.id(),
       };
-      await this.store.postScheduleJob(updatedEvent);
-      console.log('Event resized: ' + args.e.text());
+      if (args.e.text() === 'Décathlon') {
+        await this.store.postScheduleJob(updatedEvent);
+        console.log('Event resized: ' + args.e.text());
+      } else {
+        console.log('Cannot resize: ' + args.e.text());
+      }
     },
 
-    async loadEvents() {
+    async loadJobEvents() {
       if (this.store.scheduleJob.length === 0) {
         await this.store.fetchScheduleJob();
       }
-      this.calendar.update({ events: this.store.scheduleJob })
+      this.combinedEvents.push(...this.store.scheduleJob);
+    },
+    async loadClassEvents() {
+      if (this.classStore.scheduleClass.length === 0) {
+        await this.classStore.fetchScheduleClass()
+      }
+      this.combinedEvents.push(...this.classStore.scheduleClass);
     },
   },
+
   mounted: async function () {
-    await this.loadEvents();
+    await this.loadJobEvents();
+    await this.loadClassEvents();
+    this.calendar.update({ events: this.combinedEvents });
   },
 
   components: {
@@ -97,7 +129,7 @@ export default {
       return this.$refs.calendar.control
     },
   },
-  
+
 
 }
 
