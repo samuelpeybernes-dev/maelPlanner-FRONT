@@ -41,10 +41,12 @@ export default {
   },
   methods: {
     async onBeforeEventRender(args){
-      if (args.data.text !== 'Décathlon') {
-      args.data.deleteDisabled = true;
+      if (!args.data.job) {
+        args.data.deleteDisabled = true;
+        args.data.resizeDisabled = true;
       } else {
         args.data.deleteDisabled = false;
+        args.data.resizeDisabled = false;
       }
     },
     async onTimeRangeSelected(args) {
@@ -59,44 +61,47 @@ export default {
         end: args.end,
         id: DayPilot.guid(),
         text: modal.result,
+        job: true,
       };
       dp.events.add(newEvent);
       await this.store.postScheduleJob(newEvent);
     },
-    async onEventDeleted(args) {
-      
-      if (args.e.text() === 'Décathlon') {
+    async onEventDeleted(args) {     
+      if (!args.e.data.job) {
+        console.log('Cannot delete: ' + args.e.text());
+      } else {
         await this.store.deleteScheduleJob(args.e.id());
         console.log('Horraire suprimmé: ' + args.e.text());
-      } else {
-        console.log('Cannot delete: ' + args.e.text());
       }
     },
     async onEventMoved(args) {
       const updatedEvent = {
         start: args.newStart,
         end: args.newEnd,
-        text: args.e.text(),
         id: args.e.id(),
+        text: args.e.text(),
+        job: args.e.data.job,
       };
-      if (args.e.text() === 'Décathlon') {
+      if (args.e.data.job) {
         await this.store.postScheduleJob(updatedEvent);
         console.log('Event moved: ' + args.e.text());
       } else {
+
       }
     },
     async onEventResized(args) {
       const updatedEvent = {
         start: args.newStart,
         end: args.newEnd,
-        text: args.e.text(),
         id: args.e.id(),
+        text: args.e.text(),
+        job: args.e.data.job,
       };
-      if (args.e.text() === 'Décathlon') {
+      if (!args.e.data.job) {
+        console.log('Cannot resize: ' + args.e.text());
+      } else {
         await this.store.postScheduleJob(updatedEvent);
         console.log('Event resized: ' + args.e.text());
-      } else {
-        console.log('Cannot resize: ' + args.e.text());
       }
     },
 
@@ -108,7 +113,7 @@ export default {
     },
     async loadClassEvents() {
       if (this.classStore.scheduleClass.length === 0) {
-        await this.classStore.fetchScheduleClass()
+        await this.classStore.fetchScheduleClass()   
       }
       this.combinedEvents.push(...this.classStore.scheduleClass);
     },

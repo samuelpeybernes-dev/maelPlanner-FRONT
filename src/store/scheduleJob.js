@@ -30,6 +30,7 @@ export const scheduleJob = defineStore("scheduleJob",{
             newStart: scheduleJob.start,
             newEnd: scheduleJob.end,
             newText: scheduleJob.text,
+            newJob: scheduleJob.job,
           },
         }
         await axios.post(`http://127.0.0.1:1631/api/v1/scheduleJob/postSchedule`, body)

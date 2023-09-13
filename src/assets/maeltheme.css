@@ -3,10 +3,10 @@ DayPilot Calendar Theme
 https://themes.daypilot.org/calendar/theme/6ii27n
 Theme Designer Version: 2021.09.25.67272
 */
-.maeltheme_main 
-{
-	border: 1px solid #ab80ab;
+body{
+	margin: 0px;
 }
+
 
 .maeltheme_main > :nth-child(1)
 {
@@ -147,7 +147,6 @@ Theme Designer Version: 2021.09.25.67272
 	left: 0px;
 	bottom: 0px;
 	right: 0px;
-	border-right: 1px solid #ab80ab;
 	border-bottom: 1px solid  #ab80ab;
 	color: #333333;
 	background: #f3f3f3;
