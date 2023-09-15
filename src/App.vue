@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Calendar :store="store" :classStore="classStore"/>
+    <Calendar :store="store" :classStore="classStore" :hoursStore="hoursStore"/>
   </div>
 </template>
 
@@ -8,6 +8,7 @@
 import Calendar from './components/Calendar.vue'
 import { scheduleJob } from './store/scheduleJob';
 import { scheduleClass } from './store/scheduleClass';
+import { hoursSubject } from './store/hoursSubject';
 
 export default {
   components: {
@@ -18,6 +19,7 @@ export default {
       return {
         store : scheduleJob(),
         classStore : scheduleClass(),
+        hoursStore : hoursSubject(),
       };
     }
    

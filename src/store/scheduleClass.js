@@ -22,19 +22,20 @@ export const scheduleClass = defineStore("scheduleClass",{
         }
       },
 
-      async postScheduleJob(scheduleJob) {
+      async postScheduleClass(scheduleClass) {
         try {
         const body = {
-          scheduleJobJoi: {
-            id: scheduleJob.id,
-            newStart: scheduleJob.start,
-            newEnd: scheduleJob.end,
-            newText: scheduleJob.text,
+          scheduleClassJoi: {
+            id: scheduleClass.id,
+            newStart: scheduleClass.start,
+            newEnd: scheduleClass.end,
+            newText: scheduleClass.text,
+            subject_id: scheduleClass.subject_id,
           },
         }
-        await axios.post(`http://127.0.0.1:1631/api/v1/scheduleJob/postSchedule`, body)
-        this.scheduleJob = this.scheduleJob.filter((scheduleJob) => scheduleJob.id !== scheduleJob.id)
-        this.scheduleJob.push(scheduleJob)
+        await axios.post(`http://127.0.0.1:1631/api/v1/scheduleClass/postSchedule`, body)
+        this.scheduleClass = this.scheduleClass.filter((scheduleClass) => scheduleClass.id !== scheduleClass.id)
+        this.scheduleClass.push(scheduleClass)
       }
         catch (error) {
           alert(error)

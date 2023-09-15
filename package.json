@@ -11,6 +11,8 @@
     "@babel/eslint-parser": "^7.22.15",
     "@daypilot/daypilot-lite-vue": "^3.17.0",
     "axios": "^1.5.0",
+    "date-fns": "^2.30.0",
+    "date-fns-tz": "^2.0.0",
     "pinia": "^2.1.6",
     "vue": "^3.3.4"
   },
