@@ -9,6 +9,7 @@
       </v-col>
     </v-row>
   </div>
+  <scheduleModal></scheduleModal>
 </template>
 
 <script>
@@ -16,9 +17,11 @@ import { DayPilot, DayPilotCalendar } from '@daypilot/daypilot-lite-vue'
 import { format } from 'date-fns'
 import { utcToZonedTime } from 'date-fns-tz'
 import getCurrentWeekDays from '../tools/utils/dates/getCurrentWeekDays.js'
+import scheduleModal from './scheduleModal.vue'
 export default {
   components: {
     DayPilotCalendar,
+    scheduleModal
   },
   computed: {
     // DayPilot.Calendar object - https://api.daypilot.org/daypilot-calendar-class/
@@ -77,6 +80,7 @@ export default {
     },
     async onTimeRangeSelected(args) {
       const modal = await DayPilot.Modal.prompt('Ajouter horaires décathlon:', 'Décathlon');
+      console.log("🚀 ~ file: Calendar.vue:80 ~ onTimeRangeSelected ~ modal:", modal)
       const dp = args.control;
       dp.clearSelection();
       if (modal.canceled) {
@@ -196,14 +200,15 @@ export default {
           }
 
           // Détermine la durée aléatoire d'un événement
-          var { eventDuration, endDate } = this.getRandomHours(subject,remainingEventHours, maxEventHoursPerSubject, minEventHoursPerSubject, minEventHoursFor30MinWeekHours, startDate)
+          var { eventDuration, endDate } = this.getRandomHours(subject, remainingEventHours, maxEventHoursPerSubject, minEventHoursPerSubject, minEventHoursFor30MinWeekHours, startDate)
 
           // Vérifiez si un événement d'une heure peut être ajouté entre 11h et 12h
           if (startDate.getHours() === (lunchBreakStartHour - 1) && eventDuration > 1) {
             eventDuration = 1;
             endDate.setHours(startDate.getHours() + 1, startDate.getMinutes(), 0, 0);
           }
-          
+
+
           // Empeche l'ajout d'un événement à la pause déjeuner
           if (this.isEventBetweenDates(startDate, endDate, lunchBreakStartHour, lunchBreakEndHour)) {
             const lunchBreakHours = lunchBreakEndHour - startDate.getHours();
@@ -236,10 +241,10 @@ export default {
       let eventDuration
       let halfHour
       const maxEventHours = Math.min(
-            remainingEventHours,
-            subject.weekHours,
-            maxEventHoursPerSubject 
-          );
+        remainingEventHours,
+        subject.weekHours,
+        maxEventHoursPerSubject
+      );
       if (subject.weekHours === 0.5) {
         eventDuration = Math.max(minEventHoursFor30MinWeekHours, maxEventHours)
         halfHour = 30

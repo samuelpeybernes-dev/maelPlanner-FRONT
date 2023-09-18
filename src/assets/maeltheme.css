@@ -3,40 +3,40 @@ DayPilot Calendar Theme
 https://themes.daypilot.org/calendar/theme/6ii27n
 Theme Designer Version: 2021.09.25.67272
 */
-body{
+body {
 	margin: 0px;
 }
 
 
-.maeltheme_main > :nth-child(1)
-{
-	overflow: inherit!important;
-} 
-.maeltheme_main > :nth-child(1) > table > tbody > tr > :nth-child(2) > table
-{
+.maeltheme_main> :nth-child(1) {
+	overflow: inherit !important;
+}
+
+.maeltheme_main> :nth-child(1)>table>tbody>tr> :nth-child(2)>table {
 	position: fixed;
 	top: 0;
 	z-index: 100000;
 	width: -webkit-fill-available;
 }
 
-.maeltheme_main > :nth-child(2)
-{
-	overflow: inherit!important;
-} 
+.maeltheme_main> :nth-child(2) {
+	overflow: inherit !important;
+}
 
-.maeltheme_main, .maeltheme_main td 
-{
+.maeltheme_main,
+.maeltheme_main td {
 
-	font-family: -apple-system,system-ui,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+	font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 	font-size: 20px;
 }
-.maeltheme_event { 
+
+.maeltheme_event {
 	color: #333333;
 	font-weight: bold;
 	text-align: center;
 }
-.maeltheme_event_inner { 
+
+.maeltheme_event_inner {
 	position: absolute;
 	overflow: hidden;
 	margin: 0px;
@@ -51,15 +51,16 @@ body{
 	top: 0px;
 	bottom: 3px;
 	-moz-box-shadow:
-		1px 2px 3px rgba(000,000,000,0.3);
+		1px 2px 3px rgba(000, 000, 000, 0.3);
 	-webkit-box-shadow:
-		1px 2px 3px rgba(000,000,000,0.3);
+		1px 2px 3px rgba(000, 000, 000, 0.3);
 	box-shadow:
-		1px 2px 3px rgba(000,000,000,0.3);
+		1px 2px 3px rgba(000, 000, 000, 0.3);
 }
-.maeltheme_alldayevent { 
-}
-.maeltheme_alldayevent_inner { 
+
+.maeltheme_alldayevent {}
+
+.maeltheme_alldayevent_inner {
 	position: absolute;
 	overflow: hidden;
 	left: 1px;
@@ -69,7 +70,7 @@ body{
 	margin: 0px;
 	color: #333333;
 	background-color: #ffffff;
-	background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#fafafa));  
+	background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#fafafa));
 	background: -webkit-linear-gradient(top, #ffffff 0%, #fafafa);
 	background: -moz-linear-gradient(top, #ffffff 0%, #fafafa);
 	background: -ms-linear-gradient(top, #ffffff 0%, #fafafa);
@@ -80,22 +81,22 @@ body{
 	border: 1px solid #cccccc;
 	text-align: left;
 }
-.maeltheme_alldayheader_inner
-{
-	text-align: center; 
+
+.maeltheme_alldayheader_inner {
+	text-align: center;
 	position: absolute;
 	top: 0px;
 	left: 0px;
 	bottom: 0px;
 	right: 0px;
 	border-right: 1px solid #ab80ab;
-	border-bottom: 1px solid  #ab80ab;
+	border-bottom: 1px solid #ab80ab;
 	color: #333333;
 	background: #f3f3f3;
 }
-.maeltheme_colheader_inner
-{
-	text-align: center; 
+
+.maeltheme_colheader_inner {
+	text-align: center;
 	padding: 2px;
 	position: absolute;
 	top: 0px;
@@ -107,55 +108,56 @@ body{
 	color: #333333;
 	background: #fac4fa;
 }
-.maeltheme_rowheader_inner
-{
+
+.maeltheme_rowheader_inner {
 	font-size: 16pt;
-	text-align: right; 
+	text-align: right;
 	position: absolute;
 	top: 0px;
 	left: 0px;
 	bottom: 0px;
 	right: 0px;
 	border-right: 1px solid #ab80ab;
-	border-bottom: 1px solid  #ab80ab;
+	border-bottom: 1px solid #ab80ab;
 	color: #333333;
 	background: #f3f3f3;
 }
-.maeltheme_rowheader_minutes 
-{
-	font-size:10px; 
-	vertical-align: super; 
+
+.maeltheme_rowheader_minutes {
+	font-size: 10px;
+	vertical-align: super;
 	padding-left: 2px;
 	padding-right: 2px;
 }
-.maeltheme_corner_inner
-{
+
+.maeltheme_corner_inner {
 	position: absolute;
 	top: 0px;
 	left: 0px;
 	bottom: 0px;
 	right: 0px;
 	border-right: 1px solid #ab80ab;
-	border-bottom: 1px solid  #ab80ab;
+	border-bottom: 1px solid #ab80ab;
 	color: #333333;
 	background: #f3f3f3;
 }
-.maeltheme_cornerright_inner
-{
+
+.maeltheme_cornerright_inner {
 	position: absolute;
 	top: 0px;
 	left: 0px;
 	bottom: 0px;
 	right: 0px;
-	border-bottom: 1px solid  #ab80ab;
+	border-bottom: 1px solid #ab80ab;
 	color: #333333;
 	background: #f3f3f3;
 }
+
 .maeltheme_rowheader_inner {
 	padding: 2px;
 }
-.maeltheme_cell_inner
-{
+
+.maeltheme_cell_inner {
 	position: absolute;
 	top: 0px;
 	left: 0px;
@@ -165,19 +167,20 @@ body{
 	border-bottom: 1px solid #eeeeee;
 	background: #f9f9f9;
 }
+
 .maeltheme_cell_business .maeltheme_cell_inner {
 	background: #ffffff;
 }
-.maeltheme_message 
-{
+
+.maeltheme_message {
 	padding: 10px;
 	opacity: 0.9;
 	filter: alpha(opacity=90);
 	color: #ffffff;
 	background: q;
 }
-.maeltheme_shadow_inner 
-{
+
+.maeltheme_shadow_inner {
 	background-color: #666666;
 	opacity: 0.5;
 	filter: alpha(opacity=50);
@@ -186,27 +189,90 @@ body{
 	-webkit-border-radius: 15px;
 	border-radius: 15px;
 }
+
 .maeltheme_event_delete {
-	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAALCAYAAACprHcmAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAI5JREFUKFNtkLERgCAMRbmzdK8s4gAUlhYOYEHJEJYOYOEwDmGBPxC4kOPfvePy84MGR0RJ2N1A8H3N6DATwSQ57m2ql8NBG+AEM7D+UW+wjdfUPgerYNgB5gOLRHqhcasg84C2QxPMtrUhSqQIhg7ypy9VM2EUZPI/4rQ7rGxqo9sadTegw+UdjeDLAKUfhbaQUVPIfJYAAAAASUVORK5CYII=) center center no-repeat; 
-	opacity: 0.6; 
-	-ms-filter:'progid:DXImageTransform.Microsoft.Alpha(Opacity=60)'; 
+	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAALCAYAAACprHcmAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAadEVYdFNvZnR3YXJlAFBhaW50Lk5FVCB2My41LjExR/NCNwAAAI5JREFUKFNtkLERgCAMRbmzdK8s4gAUlhYOYEHJEJYOYOEwDmGBPxC4kOPfvePy84MGR0RJ2N1A8H3N6DATwSQ57m2ql8NBG+AEM7D+UW+wjdfUPgerYNgB5gOLRHqhcasg84C2QxPMtrUhSqQIhg7ypy9VM2EUZPI/4rQ7rGxqo9sadTegw+UdjeDLAKUfhbaQUVPIfJYAAAAASUVORK5CYII=) center center no-repeat;
+	opacity: 0.6;
+	-ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=60)';
 	cursor: pointer;
 }
+
 .maeltheme_event_delete:hover {
 	opacity: 1;
 	-ms-filter: none;
 }
+
 .maeltheme_scroll_up {
 	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAB3RJTUUH2wESDiYcrhwCiQAAAAlwSFlzAAAuIwAALiMBeKU/dgAAAARnQU1BAACxjwv8YQUAAACcSURBVHjaY2AgF9wWsTW6yGMlhi7OhC7AyMDQzMnBXIpFHAFuCtuaMTP+P8nA8P/b1x//FfW/HHuF1UQmxv+NUP1c3OxMVVhNvCVi683E8H8LXOY/w9+fTH81tF8fv4NiIpBRj+YoZtZ/LDUoJmKYhsVUpv0MDiyMDP96sIYV0FS2/8z9ICaLlOhvS4b/jC//MzC8xBG0vJeF7GQBlK0xdiUzCtsAAAAASUVORK5CYII=);
 }
+
 .maeltheme_scroll_down {
 	background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAALiMAAC4jAXilP3YAAACqSURBVChTY7wpam3L9J+xmQEP+PGPKZZxP4MDi4zI78uMDIwa2NT+Z2DYovrmiC+TI8OBP/8ZmEqwGvif4e8vxr+FIDkmEKH25vBWBgbG0+iK/zEwLtF+ffwOXCGI8Y+BoRFFIdC030x/WmBiYBNhpgLdswNJ8RSYaSgmgk39z1gPUfj/29ef/9rwhQTDHRHbrbdEbLvRFcGthkkAra/9/uMvhkK8piNLAgCRpTnNn4AEmAAAAABJRU5ErkJggg==);
 }
-.maeltheme_now { background-color: red; }
-.maeltheme_now:before { content: ''; top: -5px; border-width: 5px; border-color: transparent transparent transparent red; border-style: solid; width: 0px; height:0px; position: absolute; -moz-transform: scale(.9999); }
-.maeltheme_shadow_forbidden .maeltheme_shadow_inner { background-color: red; }
-.maeltheme_shadow_top { box-sizing: border-box; padding:2px;border:1px solid #ccc;background:#fff;background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#eeeeee));background: -webkit-linear-gradient(top, #ffffff 0%, #eeeeee);background: -moz-linear-gradient(top, #ffffff 0%, #eeeeee);background: -ms-linear-gradient(top, #ffffff 0%, #eeeeee);background: -o-linear-gradient(top, #ffffff 0%, #eeeeee);background: linear-gradient(top, #ffffff 0%, #eeeeee);filter: progid:DXImageTransform.Microsoft.Gradient(startColorStr="#ffffff", endColorStr="#eeeeee"); }
-.maeltheme_shadow_bottom { box-sizing: border-box; padding:2px;border:1px solid #ccc;background:#fff;background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#eeeeee));background: -webkit-linear-gradient(top, #ffffff 0%, #eeeeee);background: -moz-linear-gradient(top, #ffffff 0%, #eeeeee);background: -ms-linear-gradient(top, #ffffff 0%, #eeeeee);background: -o-linear-gradient(top, #ffffff 0%, #eeeeee);background: linear-gradient(top, #ffffff 0%, #eeeeee);filter: progid:DXImageTransform.Microsoft.Gradient(startColorStr="#ffffff", endColorStr="#eeeeee"); }
-.maeltheme_crosshair_vertical, .maeltheme_crosshair_horizontal, .maeltheme_crosshair_left, .maeltheme_crosshair_top { background-color: gray; opacity: 0.2; filter: alpha(opacity=20); }
-.maeltheme_loading { background-color: orange; color: white; padding: 2px; }
-.maeltheme_scroll { background-color: #f3f3f3; }
+
+.maeltheme_now {
+	background-color: red;
+}
+
+.maeltheme_now:before {
+	content: '';
+	top: -5px;
+	border-width: 5px;
+	border-color: transparent transparent transparent red;
+	border-style: solid;
+	width: 0px;
+	height: 0px;
+	position: absolute;
+	-moz-transform: scale(.9999);
+}
+
+.maeltheme_shadow_forbidden .maeltheme_shadow_inner {
+	background-color: red;
+}
+
+.maeltheme_shadow_top {
+	box-sizing: border-box;
+	padding: 2px;
+	border: 1px solid #ccc;
+	background: #fff;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#eeeeee));
+	background: -webkit-linear-gradient(top, #ffffff 0%, #eeeeee);
+	background: -moz-linear-gradient(top, #ffffff 0%, #eeeeee);
+	background: -ms-linear-gradient(top, #ffffff 0%, #eeeeee);
+	background: -o-linear-gradient(top, #ffffff 0%, #eeeeee);
+	background: linear-gradient(top, #ffffff 0%, #eeeeee);
+	filter: progid:DXImageTransform.Microsoft.Gradient(startColorStr="#ffffff", endColorStr="#eeeeee");
+}
+
+.maeltheme_shadow_bottom {
+	box-sizing: border-box;
+	padding: 2px;
+	border: 1px solid #ccc;
+	background: #fff;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ffffff), to(#eeeeee));
+	background: -webkit-linear-gradient(top, #ffffff 0%, #eeeeee);
+	background: -moz-linear-gradient(top, #ffffff 0%, #eeeeee);
+	background: -ms-linear-gradient(top, #ffffff 0%, #eeeeee);
+	background: -o-linear-gradient(top, #ffffff 0%, #eeeeee);
+	background: linear-gradient(top, #ffffff 0%, #eeeeee);
+	filter: progid:DXImageTransform.Microsoft.Gradient(startColorStr="#ffffff", endColorStr="#eeeeee");
+}
+
+.maeltheme_crosshair_vertical,
+.maeltheme_crosshair_horizontal,
+.maeltheme_crosshair_left,
+.maeltheme_crosshair_top {
+	background-color: gray;
+	opacity: 0.2;
+	filter: alpha(opacity=20);
+}
+
+.maeltheme_loading {
+	background-color: orange;
+	color: white;
+	padding: 2px;
+}
+
+.maeltheme_scroll {
+	background-color: #f3f3f3;
+}
