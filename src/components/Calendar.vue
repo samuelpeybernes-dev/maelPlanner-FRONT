@@ -15,6 +15,7 @@
 import { DayPilot, DayPilotCalendar } from '@daypilot/daypilot-lite-vue'
 import { format } from 'date-fns'
 import { utcToZonedTime } from 'date-fns-tz'
+import getCurrentWeekDays from '../tools/utils/dates/getCurrentWeekDays.js'
 export default {
   components: {
     DayPilotCalendar,
@@ -159,85 +160,56 @@ export default {
       }
     },
     async addRandomScheduleClass() {
+      const maxEventHoursPerDay = 8;
+      const maxEventHoursPerSubject = 2; // Limite de 2 heures par événement
+      const minEventHoursPerSubject = 1; // Minimum de 1 heure par événement
+      const minEventHoursFor30MinWeekHours = 0.5; // Minimum de 30 minutes si weekHours est de 30 minutes
+      const lunchBreakStartHour = 12;
+      const lunchBreakEndHour = 13;
+      let previousSubject = null;
       this.isLoading = true;
-      const weekDays = this.getCurrentWeekDays();
+      const weekDays = getCurrentWeekDays();
 
       if (!this.hoursStore.hoursSubject || this.hoursStore.hoursSubject.length === 0) {
         await this.hoursStore.fetchHoursSubject();
       }
 
-      const maxEventHoursPerDay = 8;
-      const maxEventHoursPerSubject = 2; // Limite de 2 heures par événement
-      const minEventHours = 1; // Minimum de 1 heure par événement
-      const minEventHoursFor30MinWeekHours = 0.5; // Minimum de 30 minutes si weekHours est de 30 minutes
-      const lunchBreakStartHour = 12;
-      const lunchBreakEndHour = 13;
-
-      let previousSubject = null;
-      const getRandomSubject = () => {
-
-        const availableSubjects = this.hoursStore.hoursSubject.filter(
-          (subject) => subject.weekHours > 0 && subject !== previousSubject
-        );
-        if (availableSubjects.length === 0) {
-          return null; // Toutes les matières sont déjà utilisées
-        }
-        const selectedSubject = availableSubjects[Math.floor(Math.random() * availableSubjects.length)];
-
-        // Mettez à jour la matière de l'événement précédent
-        previousSubject = selectedSubject;
-
-        return selectedSubject;
-      };
-
+      // Pour chaque jour de la semaine
       for (const day of weekDays) {
         let remainingEventHours = maxEventHoursPerDay;
         let startDate = new Date(day.date);
-
-        // Assurez-vous que le premier événement commence à 9h
+        let subject = null;
+        // On s'assure que le premier événement commence à 9h
         startDate.setHours(9, 0, 0, 0);
 
+        // Tant qu'il reste des heures d'événement à ajouter
         while (remainingEventHours > 0) {
-          const subject = getRandomSubject();
 
-          if (!subject) {
-            break; // Plus de matières disponibles pour la journée
-          }
-
-          const maxEventHours = Math.min(
-            remainingEventHours,
-            subject.weekHours,
-            maxEventHoursPerSubject // Limite de 2 heures par événement
-          );
-
-          // Détermine la durée minimale en fonction de weekHours
-          let eventDuration;
-          let halfHour;
-          if (subject.weekHours === 0.5) {
-            eventDuration = Math.max(minEventHoursFor30MinWeekHours, maxEventHours);
-            halfHour = 30;
+          // Détermine la matière aléatoire à utiliser
+          const randomSubjectResult = this.getRandomSubject(previousSubject);
+          if (randomSubjectResult !== null && randomSubjectResult.subject !== null) {
+            subject = randomSubjectResult.subject;
+            const { previousSubject: updatedPreviousSubject } = randomSubjectResult;
+            previousSubject = updatedPreviousSubject;
           } else {
-            eventDuration = Math.max(minEventHours, maxEventHours);
-            halfHour = 0;
+            break;
           }
 
-          // Calcul de endDate en ajoutant eventDuration à startDate
-          const endDate = new Date(startDate);
-          endDate.setHours(startDate.getHours() + (subject.weekHours === 0.5 ? 0 : eventDuration), startDate.getMinutes() + halfHour, 0, 0);
+          // Détermine la durée aléatoire d'un événement
+          var { eventDuration, endDate } = this.getRandomHours(subject,remainingEventHours, maxEventHoursPerSubject, minEventHoursPerSubject, minEventHoursFor30MinWeekHours, startDate)
 
           // Vérifiez si un événement d'une heure peut être ajouté entre 11h et 12h
           if (startDate.getHours() === (lunchBreakStartHour - 1) && eventDuration > 1) {
-            // Mise à jour de l'événement actuel pour durer une heure
             eventDuration = 1;
             endDate.setHours(startDate.getHours() + 1, startDate.getMinutes(), 0, 0);
           }
-
+          
+          // Empeche l'ajout d'un événement à la pause déjeuner
           if (this.isEventBetweenDates(startDate, endDate, lunchBreakStartHour, lunchBreakEndHour)) {
             const lunchBreakHours = lunchBreakEndHour - startDate.getHours();
             startDate.setHours(lunchBreakEndHour, 0, 0, 0);
             endDate.setHours(endDate.getHours() + lunchBreakHours, endDate.getMinutes(), 0, 0);
           }
-
           const { formatedStartDate, formatedEndDate } = this.formatDate(startDate, endDate)
           // Créez un nouvel événement avec les dates générées
           const newEvent = {
@@ -247,21 +219,52 @@ export default {
             text: subject.text,
             subject_id: subject._id,
           };
-
           // Ajoutez cet événement via postScheduleClass
           await this.classStore.postScheduleClass(Object.assign({}, newEvent));
-
           // Mettez à jour les heures restantes pour cette matière
           subject.weekHours -= eventDuration;
-
           // Mettez à jour les heures restantes pour la journée
           remainingEventHours -= eventDuration;
-
           // Mettez à jour la date de début pour le prochain événement
           startDate = new Date(endDate);
+
         }
       }
       this.isLoading = false;
+    },
+    getRandomHours(subject, remainingEventHours, maxEventHoursPerSubject, minEventHoursPerSubject, minEventHoursFor30MinWeekHours, startDate) {
+      let eventDuration
+      let halfHour
+      const maxEventHours = Math.min(
+            remainingEventHours,
+            subject.weekHours,
+            maxEventHoursPerSubject 
+          );
+      if (subject.weekHours === 0.5) {
+        eventDuration = Math.max(minEventHoursFor30MinWeekHours, maxEventHours)
+        halfHour = 30
+      } else {
+        eventDuration = Math.max(minEventHoursPerSubject, maxEventHours)
+        halfHour = 0
+      }
+      // Calcul de endDate en ajoutant eventDuration à startDate
+      const endDate = new Date(startDate)
+      endDate.setHours(startDate.getHours() + (subject.weekHours === 0.5 ? 0 : eventDuration), startDate.getMinutes() + halfHour, 0, 0)
+      return { eventDuration, endDate }
+    },
+    getRandomSubject(previousSubject) {
+      const availableSubjects = this.hoursStore.hoursSubject.filter(
+        (subject) => subject.weekHours > 0 && subject !== previousSubject
+      );
+      if (availableSubjects.length === 0) {
+        return null; // Toutes les matières sont déjà utilisées
+      }
+      const subject = availableSubjects[Math.floor(Math.random() * availableSubjects.length)];
+
+      // Mettez à jour la matière de l'événement précédent
+      previousSubject = subject;
+
+      return { subject, previousSubject };
     },
     formatDate(startDate, endDate) {
       const timeZone = 'Europe/Paris'
@@ -283,34 +286,10 @@ export default {
       return dateHeureDebut < dateFin && dateDebut < dateHeureFin;
     },
 
-    getCurrentWeekDays() {
-      const currentDate = new Date();
-      const currentDayOfWeek = currentDate.getDay(); // Jour de la semaine actuel (0 = Dimanche, 1 = Lundi, ...)
-
-      // Si c'est un dimanche (currentDayOfWeek === 0), ajustez la date pour obtenir la semaine actuelle
-      if (currentDayOfWeek === 0) {
-        currentDate.setDate(currentDate.getDate() - 6); // Remonter de 6 jours pour obtenir le lundi de la semaine actuelle
-      } else {
-        currentDate.setDate(currentDate.getDate() - currentDayOfWeek + 1); // Réglez la date sur le lundi de la semaine actuelle
-      }
-
-      const weekDays = [];
-      for (let i = 1; i < 8; i++) {
-        const day = new Date(currentDate);
-        day.setDate(currentDate.getDate() + i);
-        weekDays.push({
-          dayOfWeek: i, // 0 pour Lundi, 1 pour mardi, ...
-          date: day.toISOString().split('T')[0], // Date au format 'YYYY-MM-DD'
-        });
-      }
-      return weekDays;
-    }
-
   },
 
 
   mounted: async function () {
-    this.getCurrentWeekDays();
     await this.loadJobEvents();
     await this.loadClassEvents();
 
