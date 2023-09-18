@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Calendar :store="store" :classStore="classStore" :hoursStore="hoursStore"/>
+    <Calendar :store="store" :classStore="classStore" :hoursStore="hoursStore" />
   </div>
 </template>
 

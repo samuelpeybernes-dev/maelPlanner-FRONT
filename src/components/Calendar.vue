@@ -9,7 +9,7 @@
       </v-col>
     </v-row>
   </div>
-  <scheduleModal></scheduleModal>
+  <scheduleModal v-show="dialog" :scheduleModal="scheduleModal"></scheduleModal>
 </template>
 
 <script>
@@ -43,6 +43,10 @@ export default {
       type: Object,
       required: true,
     },
+    dialogProp: {
+      type: Boolean,
+      default: true,
+    },
   },
   data() {
     return {
@@ -66,9 +70,20 @@ export default {
         onBeforeEventRender: this.onBeforeEventRender,
       },
       combinedEvents: [],
+      scheduleModal: {
+        title: '',
+        selectedColor: '#f2f2f2f2',
+      },
+      dialog: this.dialogProp,
     };
   },
   methods: {
+    async updateDialogValue(newValue) {
+      return new Promise((resolve) => {
+        this.dialog = newValue;
+        resolve(this.dialog); // Résoudre la promesse avec la nouvelle valeur de this.dialog
+      });
+    },
     async onBeforeEventRender(args) {
       if (!args.data.job) {
         args.data.deleteDisabled = true;
@@ -79,8 +94,11 @@ export default {
       }
     },
     async onTimeRangeSelected(args) {
-      const modal = await DayPilot.Modal.prompt('Ajouter horaires décathlon:', 'Décathlon');
-      console.log("🚀 ~ file: Calendar.vue:80 ~ onTimeRangeSelected ~ modal:", modal)
+      const modalPromise = this.updateDialogValue(true); // Stockez la promesse dans une variable
+
+      // Attendre que la promesse soit résolue
+      const modal = await modalPromise;
+      //await DayPilot.Modal.prompt('Ajouter horaires décathlon:', 'Décathlon');
       const dp = args.control;
       dp.clearSelection();
       if (modal.canceled) {
@@ -90,8 +108,9 @@ export default {
         start: args.start,
         end: args.end,
         id: DayPilot.guid(),
-        text: modal.result,
+        text: this.scheduleModal.title,
         job: true,
+        backColor: this.scheduleModal.selectedColor,
       };
       dp.events.add(newEvent);
       await this.store.postScheduleJob(newEvent);
