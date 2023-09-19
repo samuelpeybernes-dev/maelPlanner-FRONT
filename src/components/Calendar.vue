@@ -9,7 +9,8 @@
       </v-col>
     </v-row>
   </div>
-  <scheduleModal v-on:validated="validate" v-on:created="create" :dialog="scheduleModal.dialogLocal"></scheduleModal>
+  <scheduleModal v-on:validated="addJob" v-on:canceled="cancelJob" :dialog="scheduleModal.dialogLocal"></scheduleModal>
+  <popupMenu></popupMenu>
 </template>
 
 <script>
@@ -18,10 +19,12 @@ import { format } from 'date-fns'
 import { utcToZonedTime } from 'date-fns-tz'
 import getCurrentWeekDays from '../tools/utils/dates/getCurrentWeekDays.js'
 import scheduleModal from './scheduleModal.vue'
+import popupMenu from './popupMenu.vue'
 export default {
   components: {
     DayPilotCalendar,
-    scheduleModal
+    scheduleModal,
+    popupMenu
   },
   computed: {
     // DayPilot.Calendar object - https://api.daypilot.org/daypilot-calendar-class/
@@ -69,19 +72,38 @@ export default {
       combinedEvents: [],
       scheduleModal: {
         title: "",
-        selectedColor: '#f2f2f2f2',
+        selectedColor: '',
         dialogLocal: false,
+        validated: false,
       },
+      selectedTimeRangeArgs: null,
     };
   },
   methods: {
-    create(scheduleModal) {
-      if (this.scheduleModal.dialogLocal) {
-        this.scheduleModal.title = scheduleModal.title;
-        this.scheduleModal.selectedColor = scheduleModal.selectedColor;
+    cancelJob(scheduleModal) {
+      this.scheduleModal.dialogLocal = scheduleModal.dialogLocal;
+    },
+    async addJob(scheduleModal) {
+      this.scheduleModal.validated = scheduleModal.validated;
+      if (scheduleModal.validated) {
+        const modal = scheduleModal;
+        const args = this.selectedTimeRangeArgs;
+        const dp = args.control;
+
+        const newEvent = {
+          start: args.start,
+          end: args.end,
+          id: DayPilot.guid(),
+          text: modal.title,
+          job: true,
+          backColor: modal.selectedColor,
+          borderColor: modal.selectedColor,
+        };
+        dp.events.add(newEvent);
+        await this.store.postScheduleJob(newEvent);
         this.scheduleModal.dialogLocal = scheduleModal.dialogLocal;
+        await this.addRandomScheduleClass();
       }
-      validate(){}
     },
     async onBeforeEventRender(args) {
       if (!args.data.job) {
@@ -94,28 +116,11 @@ export default {
     },
     async onTimeRangeSelected(args) {
       this.scheduleModal.dialogLocal = true;
-
-      const modal = this.scheduleModal;
-      console.log("🚀 ~ file: Calendar.vue:98 ~ onTimeRangeSelected ~ modal:", modal)
-
-      //await DayPilot.Modal.prompt('Ajouter horaires décathlon:', 'Décathlon');
       const dp = args.control;
+      this.selectedTimeRangeArgs = args;
       dp.clearSelection();
-      if (!modal.dialogLocal) {
-        return;
-      }
-      const newEvent = {
-        start: args.start,
-        end: args.end,
-        id: DayPilot.guid(),
-        text: modal.title,
-        job: true,
-        backColor: modal.selectedColor,
-      };
-      dp.events.add(newEvent);
-      await this.store.postScheduleJob(newEvent);
-      await this.addRandomScheduleClass();
     },
+
     async onEventDeleted(args) {
       if (!args.e.data.job) {
         console.log('Cannot delete: ' + args.e.text());
@@ -254,7 +259,9 @@ export default {
 
         }
       }
+  
       this.isLoading = false;
+     
     },
     getRandomHours(subject, remainingEventHours, maxEventHoursPerSubject, minEventHoursPerSubject, minEventHoursFor30MinWeekHours, startDate) {
       let eventDuration
