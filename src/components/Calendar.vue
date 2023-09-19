@@ -9,7 +9,7 @@
       </v-col>
     </v-row>
   </div>
-  <scheduleModal v-show="dialog" :scheduleModal="scheduleModal"></scheduleModal>
+  <scheduleModal v-on:validated="validate" v-on:created="create" :dialog="scheduleModal.dialogLocal"></scheduleModal>
 </template>
 
 <script>
@@ -43,10 +43,7 @@ export default {
       type: Object,
       required: true,
     },
-    dialogProp: {
-      type: Boolean,
-      default: true,
-    },
+
   },
   data() {
     return {
@@ -71,18 +68,20 @@ export default {
       },
       combinedEvents: [],
       scheduleModal: {
-        title: '',
+        title: "",
         selectedColor: '#f2f2f2f2',
+        dialogLocal: false,
       },
-      dialog: this.dialogProp,
     };
   },
   methods: {
-    async updateDialogValue(newValue) {
-      return new Promise((resolve) => {
-        this.dialog = newValue;
-        resolve(this.dialog); // Résoudre la promesse avec la nouvelle valeur de this.dialog
-      });
+    create(scheduleModal) {
+      if (this.scheduleModal.dialogLocal) {
+        this.scheduleModal.title = scheduleModal.title;
+        this.scheduleModal.selectedColor = scheduleModal.selectedColor;
+        this.scheduleModal.dialogLocal = scheduleModal.dialogLocal;
+      }
+      validate(){}
     },
     async onBeforeEventRender(args) {
       if (!args.data.job) {
@@ -94,23 +93,24 @@ export default {
       }
     },
     async onTimeRangeSelected(args) {
-      const modalPromise = this.updateDialogValue(true); // Stockez la promesse dans une variable
+      this.scheduleModal.dialogLocal = true;
 
-      // Attendre que la promesse soit résolue
-      const modal = await modalPromise;
+      const modal = this.scheduleModal;
+      console.log("🚀 ~ file: Calendar.vue:98 ~ onTimeRangeSelected ~ modal:", modal)
+
       //await DayPilot.Modal.prompt('Ajouter horaires décathlon:', 'Décathlon');
       const dp = args.control;
       dp.clearSelection();
-      if (modal.canceled) {
+      if (!modal.dialogLocal) {
         return;
       }
       const newEvent = {
         start: args.start,
         end: args.end,
         id: DayPilot.guid(),
-        text: this.scheduleModal.title,
+        text: modal.title,
         job: true,
-        backColor: this.scheduleModal.selectedColor,
+        backColor: modal.selectedColor,
       };
       dp.events.add(newEvent);
       await this.store.postScheduleJob(newEvent);
