@@ -13,7 +13,7 @@ export const scheduleJob = defineStore("scheduleJob",{
     actions: {
       async fetchScheduleJob() {
         try {
-            const { data } = await axios.get(`http://127.0.0.1:1631/api/v1/scheduleJob/getSchedule`)
+            const { data } = await axios.get(`https://mael-planner-back.vercel.app:1631/api/v1/scheduleJob/getSchedule`)
             this.scheduleJob = data.scheduleJob           
           }
           catch (error) {
@@ -35,7 +35,7 @@ export const scheduleJob = defineStore("scheduleJob",{
             newBorderColor: scheduleJob.borderColor,
           },
         }
-        await axios.post(`http://127.0.0.1:1631/api/v1/scheduleJob/postSchedule`, body)
+        await axios.post(`https://mael-planner-back.vercel.app:1631/api/v1/scheduleJob/postSchedule`, body)
         this.scheduleJob = this.scheduleJob.filter((scheduleJob) => scheduleJob.id !== scheduleJob.id)
         this.scheduleJob.push(scheduleJob)
       }
@@ -47,7 +47,7 @@ export const scheduleJob = defineStore("scheduleJob",{
 
       async deleteScheduleJob(scheduleJobId) {
         try {
-          axios.delete(`http://127.0.0.1:1631/api/v1/scheduleJob/deleteSchedule?id=${scheduleJobId}`)
+          axios.delete(`https://mael-planner-back.vercel.app:1631/api/v1/scheduleJob/deleteSchedule?id=${scheduleJobId}`)
           this.scheduleJob = this.scheduleJob.filter((scheduleJob) => scheduleJob.id !== scheduleJobId)
           }
           catch (error) {
