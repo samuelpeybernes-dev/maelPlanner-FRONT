@@ -13,7 +13,7 @@ export const scheduleClass = defineStore("scheduleClass",{
     actions: {
       async fetchScheduleClass() {
         try {
-            const { data } = await axios.get(`https://mael-planner-back.vercel.app:1631/api/v1/scheduleClass/getSchedule`)
+            const { data } = await axios.get(`https://mael-planner-back.vercel.app/api/v1/scheduleClass/getSchedule`)
             this.scheduleClass = data.scheduleClass           
           }
           catch (error) {
@@ -33,7 +33,7 @@ export const scheduleClass = defineStore("scheduleClass",{
             subject_id: scheduleClass.subject_id,
           },
         }
-        await axios.post(`https://mael-planner-back.vercel.app:1631/api/v1/scheduleClass/postSchedule`, body)
+        await axios.post(`https://mael-planner-back.vercel.app/api/v1/scheduleClass/postSchedule`, body)
         this.scheduleClass = this.scheduleClass.filter((scheduleClass) => scheduleClass.id !== scheduleClass.id)
         this.scheduleClass.push(scheduleClass)
       }
