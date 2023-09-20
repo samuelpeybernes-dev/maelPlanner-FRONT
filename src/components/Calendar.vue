@@ -10,7 +10,6 @@
     </v-row>
   </div>
   <scheduleModal v-on:validated="addJob" v-on:canceled="cancelJob" :dialog="scheduleModal.dialogLocal"></scheduleModal>
-  <popupMenu></popupMenu>
 </template>
 
 <script>
@@ -19,12 +18,10 @@ import { format } from 'date-fns'
 import { utcToZonedTime } from 'date-fns-tz'
 import getCurrentWeekDays from '../tools/utils/dates/getCurrentWeekDays.js'
 import scheduleModal from './scheduleModal.vue'
-import popupMenu from './popupMenu.vue'
 export default {
   components: {
     DayPilotCalendar,
     scheduleModal,
-    popupMenu
   },
   computed: {
     // DayPilot.Calendar object - https://api.daypilot.org/daypilot-calendar-class/
@@ -102,7 +99,6 @@ export default {
         dp.events.add(newEvent);
         await this.store.postScheduleJob(newEvent);
         this.scheduleModal.dialogLocal = scheduleModal.dialogLocal;
-        await this.addRandomScheduleClass();
       }
     },
     async onBeforeEventRender(args) {
