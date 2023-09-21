@@ -3,9 +3,8 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import dotenv from 'dotenv'
-if (process.env.PLANNER_SERVER != 'production') {
-  dotenv.config()
-}
+dotenv.config()
+
 let backPlannerUrl
 switch (process.env.PLANNER_SERVER) {
 
@@ -19,6 +18,8 @@ switch (process.env.PLANNER_SERVER) {
     backPlannerUrl = 'http://localhost:1631/api/v1/'
     break
 }  
+console.log("🚀 ~ file: vite.config.js:13 ~ backPlannerUrl:", backPlannerUrl)
+console.log("🚀 ~ file: vite.config.js:10 ~ process.env.PLANNER_SERVER:", process.env.PLANNER_SERVER)
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {
