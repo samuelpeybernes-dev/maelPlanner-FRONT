@@ -13,7 +13,7 @@ export const hoursSubject = defineStore("hoursSubject",{
     actions: {
       async fetchHoursSubject() {
         try {
-            const { data } = await axios.get(`https://mael-planner-back.vercel.app/api/v1/hoursSubject/gethoursSubject`)
+            const { data } = await axios.get(`/planner/hoursSubject/gethoursSubject`)
             this.hoursSubject = data.hoursSubject           
           }
           catch (error) {

@@ -96,6 +96,7 @@ export default {
           backColor: modal.selectedColor,
           borderColor: modal.selectedColor,
         };
+        dp.clearSelection();
         dp.events.add(newEvent);
         await this.store.postScheduleJob(newEvent);
         this.scheduleModal.dialogLocal = scheduleModal.dialogLocal;
@@ -114,7 +115,7 @@ export default {
       this.scheduleModal.dialogLocal = true;
       const dp = args.control;
       this.selectedTimeRangeArgs = args;
-      dp.clearSelection();
+      
     },
 
     async onEventDeleted(args) {
