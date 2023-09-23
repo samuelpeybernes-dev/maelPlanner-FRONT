@@ -3,9 +3,8 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import dotenv from 'dotenv'
-if (process.env.PLANNER_SERVER != 'production') {
-  dotenv.config()
-}
+dotenv.config()
+
 let backPlannerUrl
 switch (process.env.PLANNER_SERVER) {
 
@@ -31,6 +30,7 @@ export default defineConfig({
   },
   plugins: [
     vue(),
+    
   ],
   resolve: {
     alias: {

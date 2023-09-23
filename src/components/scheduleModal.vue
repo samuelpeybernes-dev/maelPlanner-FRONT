@@ -19,10 +19,10 @@
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="red-accent-4" variant="text" v-on:Click="cancel">
+                    <v-btn color="red-accent-4" variant="text" v-on:click="cancel">
                         Annuler
                     </v-btn>
-                    <v-btn color="blue-darken-1" variant="text" v-on:Click="validate">
+                    <v-btn color="blue-darken-1" variant="text" v-on:click="validate">
                         Ajouter
                     </v-btn>
                 </v-card-actions>

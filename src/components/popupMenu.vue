@@ -2,13 +2,11 @@
     <div class="d-flex justify-space-around">
         <v-menu>
             <template v-slot:activator="{ props }">
-                <v-btn color="primary" v-bind="props">
-                    Activator slot
-                </v-btn>
+                <v-btn color="purple" icon="mdi-plus" v-bind="props"></v-btn>
             </template>
             <v-list>
                 <v-list-item>
-                    <v-list-item-title><button v-on:Click="generate">Generer les cours</button></v-list-item-title>
+                    <button v-on:click="generate">Generer les cours</button>
                 </v-list-item>
             </v-list>
         </v-menu>
@@ -24,7 +22,7 @@ export default {
     data() {
 
         return {
-            
+
         };
     },
     methods: {

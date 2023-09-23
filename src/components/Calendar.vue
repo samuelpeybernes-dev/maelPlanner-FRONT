@@ -10,7 +10,7 @@
     </v-row>
   </div>
   <scheduleModal v-on:validated="addJob" v-on:canceled="cancelJob" :dialog="scheduleModal.dialogLocal"></scheduleModal>
-  <popupMenu v-on:generated="addRandomScheduleClass"></popupMenu>
+  <popupMenu class="fixed bottom-7 right-7" v-on:generated="addRandomScheduleClass"></popupMenu>
 </template>
 
 <script>
@@ -81,7 +81,9 @@ export default {
   },
   methods: {
     cancelJob(scheduleModal) {
+      const dp = this.selectedTimeRangeArgs.control;
       this.scheduleModal.dialogLocal = scheduleModal.dialogLocal;
+      dp.clearSelection();
     },
     async addJob(scheduleModal) {
       this.scheduleModal.validated = scheduleModal.validated;
@@ -103,7 +105,6 @@ export default {
         dp.events.add(newEvent);
         await this.store.postScheduleJob(newEvent);
         this.scheduleModal.dialogLocal = scheduleModal.dialogLocal;
-        await this.addRandomScheduleClass();
       }
     },
     async onBeforeEventRender(args) {
@@ -119,7 +120,7 @@ export default {
       this.scheduleModal.dialogLocal = true;
       const dp = args.control;
       this.selectedTimeRangeArgs = args;
-      
+
     },
 
     async onEventDeleted(args) {
@@ -170,13 +171,14 @@ export default {
       this.combinedEvents.push(...this.store.scheduleJob);
     },
     async loadClassEvents() {
-      if (this.classStore.scheduleClass.length === 0) {
-        await this.classStore.fetchScheduleClass();
-        this.combinedEvents.push(...this.classStore.scheduleClass);
 
-        // Maintenant que nous avons ajouté les événements, nous pouvons formater les couleurs
-        this.formatEventColors(this.classStore.scheduleClass);
-      }
+
+      await this.classStore.fetchScheduleClass();
+      this.combinedEvents.push(...this.classStore.scheduleClass);
+
+      // Maintenant que nous avons ajouté les événements, nous pouvons formater les couleurs
+      this.formatEventColors(this.classStore.scheduleClass);
+
     },
     formatEventColors(events) {
       for (const event of events) {
@@ -189,6 +191,7 @@ export default {
       }
     },
     async addRandomScheduleClass() {
+      await this.classStore.deleteScheduleClass();
       const maxEventHoursPerDay = 8;
       const maxEventHoursPerSubject = 2; // Limite de 2 heures par événement
       const minEventHoursPerSubject = 1; // Minimum de 1 heure par événement
@@ -198,10 +201,8 @@ export default {
       let previousSubject = null;
       this.isLoading = true;
       const weekDays = getCurrentWeekDays();
-
-      if (!this.hoursStore.hoursSubject || this.hoursStore.hoursSubject.length === 0) {
-        await this.hoursStore.fetchHoursSubject();
-      }
+      // On récupere les heures disponibles pour chaque matière
+      await this.hoursStore.fetchHoursSubject();
 
       // Pour chaque jour de la semaine
       for (const day of weekDays) {
@@ -237,32 +238,62 @@ export default {
           // Empeche l'ajout d'un événement à la pause déjeuner
           if (this.isEventBetweenDates(startDate, endDate, lunchBreakStartHour, lunchBreakEndHour)) {
             const lunchBreakHours = lunchBreakEndHour - startDate.getHours();
+            const lunchBreakMinutes = startDate.getMinutes();
             startDate.setHours(lunchBreakEndHour, 0, 0, 0);
-            endDate.setHours(endDate.getHours() + lunchBreakHours, endDate.getMinutes(), 0, 0);
+            endDate.setHours(endDate.getHours() + lunchBreakHours, endDate.getMinutes() - lunchBreakMinutes, 0, 0);
           }
-          const { formatedStartDate, formatedEndDate } = this.formatDate(startDate, endDate)
-          // Créez un nouvel événement avec les dates générées
-          const newEvent = {
-            id: DayPilot.guid(),
-            start: formatedStartDate,
-            end: formatedEndDate,
-            text: subject.text,
-            subject_id: subject._id,
-          };
-          // Ajoutez cet événement via postScheduleClass
-          await this.classStore.postScheduleClass(Object.assign({}, newEvent));
-          // Mettez à jour les heures restantes pour cette matière
-          subject.weekHours -= eventDuration;
-          // Mettez à jour les heures restantes pour la journée
-          remainingEventHours -= eventDuration;
-          // Mettez à jour la date de début pour le prochain événement
-          startDate = new Date(endDate);
+          let isOverlap = false;
+          const { formatedStartDate, formatedEndDate } = this.formatDate(startDate, endDate);
+          for (const jobEvent of this.store.scheduleJob) {
+            if (this.isEventOverlap({ start: formatedStartDate, end: formatedEndDate }, jobEvent)) {
+              isOverlap = true;
+              break;
+            }
+          }
 
+          if (!isOverlap) {
+            // Aucun chevauchement trouvé, ajoutez l'événement de classe
+          
+            const newEvent = {
+              id: DayPilot.guid(),
+              start: formatedStartDate,
+              end: formatedEndDate,
+              text: subject.text,
+              subject_id: subject._id,
+            };
+            await this.classStore.postScheduleClass(Object.assign({}, newEvent));
+            // Mettez à jour les heures restantes pour cette matière
+            subject.weekHours -= eventDuration;
+            // Mettez à jour les heures restantes pour la journée
+            remainingEventHours -= eventDuration;
+          } else {
+            remainingEventHours -= eventDuration;
+          }
+          startDate = new Date(endDate);
         }
       }
-  
+
+      this.combinedEvents = [];
+      this.combinedEvents.push(...this.store.scheduleJob);
+      await this.loadClassEvents();
+      this.calendar.update({ events: this.combinedEvents });
       this.isLoading = false;
-     
+
+    },
+    isEventOverlap(event1, event2) {
+      const start1 = new Date(event1.start);
+      const end1 = new Date(event1.end);
+      const start2 = new Date(event2.start);
+      const end2 = new Date(event2.end);
+
+      // Vérifiez si event1 commence après que event2 ne se termine
+      // ou si event1 se termine avant que event2 ne commence, ce qui signifie qu'ils ne se chevauchent pas
+      if (start1 >= end2 || end1 <= start2) {
+        return false;
+      }
+
+      // S'ils se chevauchent, retournez vrai
+      return true;
     },
     getRandomHours(subject, remainingEventHours, maxEventHoursPerSubject, minEventHoursPerSubject, minEventHoursFor30MinWeekHours, startDate) {
       let eventDuration
@@ -273,7 +304,7 @@ export default {
         maxEventHoursPerSubject
       );
       if (subject.weekHours === 0.5) {
-        eventDuration = Math.max(minEventHoursFor30MinWeekHours, maxEventHours)
+        eventDuration = 1
         halfHour = 30
       } else {
         eventDuration = Math.max(minEventHoursPerSubject, maxEventHours)
@@ -289,7 +320,12 @@ export default {
         (subject) => subject.weekHours > 0 && subject !== previousSubject
       );
       if (availableSubjects.length === 0) {
-        return null; // Toutes les matières sont déjà utilisées
+        // Toutes les matières sont déjà utilisées, mais nous continuons avec la matière actuelle s'il y en a une.
+        if (previousSubject !== null && previousSubject.weekHours > 0) {
+          return { subject: previousSubject, previousSubject };
+        } else {
+          return null; // Toutes les matières sont épuisées.
+        }
       }
       const subject = availableSubjects[Math.floor(Math.random() * availableSubjects.length)];
 
