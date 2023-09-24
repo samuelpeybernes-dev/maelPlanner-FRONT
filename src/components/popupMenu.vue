@@ -4,9 +4,9 @@
             <template v-slot:activator="{ props }">
                 <v-btn color="purple" icon="mdi-plus" v-bind="props"></v-btn>
             </template>
-            <v-list>
-                <v-list-item>
-                    <button v-on:click="generate">Generer les cours</button>
+            <v-list class="text-center">
+                <v-list-item class="px-0">
+                    <v-btn  height="50px" width="100%" v-on:click="generate">Generer les cours</v-btn>
                 </v-list-item>
             </v-list>
         </v-menu>
@@ -15,20 +15,11 @@
   
 <script>
 export default {
-    props: {
 
-    },
-
-    data() {
-
-        return {
-
-        };
-    },
     methods: {
         async generate() {
             this.$emit('generated');
-        }
+        },
     },
 
 }

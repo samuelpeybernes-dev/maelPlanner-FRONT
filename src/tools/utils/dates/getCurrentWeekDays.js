@@ -1,5 +1,5 @@
-function getCurrentWeekDays() {
-    const currentDate = new Date();
+function getCurrentWeekDays(startDate) {
+    const currentDate = new Date(startDate);
     const currentDayOfWeek = currentDate.getDay(); // Jour de la semaine actuel (0 = Dimanche, 1 = Lundi, ...)
 
     // Si c'est un dimanche (currentDayOfWeek === 0), ajustez la date pour obtenir la semaine actuelle
@@ -10,15 +10,16 @@ function getCurrentWeekDays() {
     }
 
     const weekDays = [];
-    for (let i = 0; i < 7; i++) {
+    for (let i = 1; i < 8; i++) {
       const day = new Date(currentDate);
       day.setDate(currentDate.getDate() + i);
       weekDays.push({
-        dayOfWeek: i, // 0 pour Lundi, 1 pour mardi, ...
+        dayOfWeek: i, // 1 pour Lundi, 2 pour mardi, ...
         date: day.toISOString().split('T')[0], // Date au format 'YYYY-MM-DD'
       });
     }
     return weekDays;
+
   }
 
 export default getCurrentWeekDays
