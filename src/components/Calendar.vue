@@ -10,7 +10,12 @@
     </v-row>
   </div>
   <scheduleModal v-on:validated="addJob" v-on:canceled="cancelJob" :dialog="scheduleModal.dialogLocal"></scheduleModal>
-  <popupMenu class="fixed bottom-7 right-7" v-on:generated="addRandomScheduleClass"></popupMenu>
+  <div class="fixed bottom-4 right-4">
+    <v-btn class="m-0.5" color="purple" icon="mdi-arrow-left" v-on:click="navigatePrevious"></v-btn>
+    <v-btn class="m-0.5" color="purple" icon="mdi-calendar-today" v-on:click="navigateToday"></v-btn>
+    <v-btn class="m-0.5" color="purple" icon="mdi-arrow-right" v-on:click="navigateNext"></v-btn>
+    <popupMenu class="m-0.5" v-on:generated="addRandomScheduleClass"></popupMenu>
+  </div>
 </template>
 
 <script>
@@ -68,6 +73,7 @@ export default {
         onEventMoved: this.onEventMoved,
         onEventResized: this.onEventResized,
         onBeforeEventRender: this.onBeforeEventRender,
+        startDate: DayPilot.Date.today().firstDayOfWeek(),
       },
       combinedEvents: [],
       scheduleModal: {
@@ -80,6 +86,17 @@ export default {
     };
   },
   methods: {
+    navigatePrevious() {
+      this.config.startDate = this.config.startDate.addDays(-7);
+    },
+
+    navigateNext() {
+      this.config.startDate = this.config.startDate.addDays(7);
+    },
+
+    navigateToday() {
+      this.config.startDate = DayPilot.Date.today();
+    },
     cancelJob(scheduleModal) {
       const dp = this.selectedTimeRangeArgs.control;
       this.scheduleModal.dialogLocal = scheduleModal.dialogLocal;
@@ -200,7 +217,7 @@ export default {
       const lunchBreakEndHour = 13;
       let previousSubject = null;
       this.isLoading = true;
-      const weekDays = getCurrentWeekDays();
+      const weekDays = getCurrentWeekDays(this.config.startDate);
       // On récupere les heures disponibles pour chaque matière
       await this.hoursStore.fetchHoursSubject();
 
@@ -253,7 +270,7 @@ export default {
 
           if (!isOverlap) {
             // Aucun chevauchement trouvé, ajoutez l'événement de classe
-          
+
             const newEvent = {
               id: DayPilot.guid(),
               start: formatedStartDate,
