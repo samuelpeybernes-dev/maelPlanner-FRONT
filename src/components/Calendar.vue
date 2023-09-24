@@ -108,19 +108,25 @@ export default {
         const modal = scheduleModal;
         const args = this.selectedTimeRangeArgs;
         const dp = args.control;
+        const test = " " + args.start.getHours().toString() + "h" + args.start.getMinutes().toString() + "  " + args.end.getHours().toString() + "h" + args.end.getMinutes().toString();
+        console.log("🚀 ~ file: Calendar.vue:112 ~ addJob ~ test:", test)
 
-        const newEvent = {
+        const newEvent = new DayPilot.Event({
           start: args.start,
           end: args.end,
           id: DayPilot.guid(),
-          text: modal.title,
+          text: modal.title ,
           job: true,
           backColor: modal.selectedColor,
           borderColor: modal.selectedColor,
-        };
+        });
+
+       newEvent.client.html(modal.title + "<br><span style='font-weight: normal; font-size: 16px;'>" + test + "</span>");
+        
+        console.log("🚀 ~ file: Calendar.vue:127 ~ addJob ~ newEvent:", newEvent.data)
         dp.clearSelection();
         dp.events.add(newEvent);
-        await this.store.postScheduleJob(newEvent);
+        await this.store.postScheduleJob(newEvent.data);
         this.scheduleModal.dialogLocal = scheduleModal.dialogLocal;
       }
     },
@@ -377,7 +383,6 @@ export default {
   mounted: async function () {
     await this.loadJobEvents();
     await this.loadClassEvents();
-
     this.calendar.update({ events: this.combinedEvents });
   },
 }
