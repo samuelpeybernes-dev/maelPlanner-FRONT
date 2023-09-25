@@ -30,6 +30,7 @@ export const scheduleClass = defineStore("scheduleClass", {
             newStart: scheduleClass.start,
             newEnd: scheduleClass.end,
             newText: scheduleClass.text,
+            newHtml: scheduleClass.html,
             subject_id: scheduleClass.subject_id,
           },
         }
@@ -42,9 +43,9 @@ export const scheduleClass = defineStore("scheduleClass", {
         console.log(error)
       }
     },
-    async deleteScheduleClass() {
+    async deleteScheduleClass(start, end) {
       try {
-        axios.delete(`/planner/scheduleClass/deleteSchedule`)
+        axios.delete(`/planner/scheduleClass/deleteSchedule?start=${start}&end=${end}`)
       }
       catch (error) {
         alert(error)

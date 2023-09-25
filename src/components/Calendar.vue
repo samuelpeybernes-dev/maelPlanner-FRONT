@@ -108,9 +108,7 @@ export default {
         const modal = scheduleModal;
         const args = this.selectedTimeRangeArgs;
         const dp = args.control;
-        const test = " " + args.start.getHours().toString() + "h" + args.start.getMinutes().toString() + "  " + args.end.getHours().toString() + "h" + args.end.getMinutes().toString();
-        console.log("🚀 ~ file: Calendar.vue:112 ~ addJob ~ test:", test)
-
+        const hours = " " + args.start.getHours().toString() + "h" + args.start.getMinutes().toString() + "  " + args.end.getHours().toString() + "h" + args.end.getMinutes().toString();
         const newEvent = new DayPilot.Event({
           start: args.start,
           end: args.end,
@@ -120,8 +118,7 @@ export default {
           backColor: modal.selectedColor,
           borderColor: modal.selectedColor,
         });
-
-       newEvent.client.html(modal.title + "<br><span style='font-weight: normal; font-size: 16px;'>" + test + "</span>");
+       newEvent.client.html(modal.title + "<br><span style='font-weight: normal; font-size: 16px;'>" + hours + "</span>");
         
         console.log("🚀 ~ file: Calendar.vue:127 ~ addJob ~ newEvent:", newEvent.data)
         dp.clearSelection();
@@ -155,34 +152,38 @@ export default {
       }
     },
     async onEventMoved(args) {
-      const updatedEvent = {
+      const hours = " " + args.newStart.getHours().toString() + "h" + args.newStart.getMinutes().toString() + "  " + args.newEnd.getHours().toString() + "h" + args.newEnd.getMinutes().toString();
+      const updatedEvent = new DayPilot.Event({
         start: args.newStart,
         end: args.newEnd,
         id: args.e.id(),
         text: args.e.text(),
         job: args.e.data.job,
         subject_id: args.e.data.subject_id,
-      };
+      });
+      updatedEvent.client.html(args.e.text() + "<br><span style='font-weight: normal; font-size: 16px;'>" + hours + "</span>");
       if (!args.e.data.job) {
-        await this.classStore.postScheduleClass(updatedEvent);
+        await this.classStore.postScheduleClass(updatedEvent.data);
         console.log('Event moved: ' + args.e.text());
       } else {
-        await this.store.postScheduleJob(updatedEvent);
+        await this.store.postScheduleJob(updatedEvent.data);
         console.log('Event moved: ' + args.e.text());
       }
     },
     async onEventResized(args) {
-      const updatedEvent = {
+      const hours = " " + args.newStart.getHours().toString() + "h" + args.newStart.getMinutes().toString() + "  " + args.newEnd.getHours().toString() + "h" + args.newEnd.getMinutes().toString();
+      const updatedEvent = new DayPilot.Event({
         start: args.newStart,
         end: args.newEnd,
         id: args.e.id(),
         text: args.e.text(),
         job: args.e.data.job,
-      };
+      });
+      updatedEvent.client.html(args.e.text() + "<br><span style='font-weight: normal; font-size: 16px;'>" + hours + "</span>");
       if (!args.e.data.job) {
         console.log('Cannot resize: ' + args.e.text());
       } else {
-        await this.store.postScheduleJob(updatedEvent);
+        await this.store.postScheduleJob(updatedEvent.data);
         console.log('Event resized: ' + args.e.text());
       }
     },
@@ -214,7 +215,12 @@ export default {
       }
     },
     async addRandomScheduleClass() {
-      await this.classStore.deleteScheduleClass();
+      const startWeek = new Date(this.config.startDate.addDays(-6));
+      const endWeek = new Date(this.config.startDate);
+      endWeek.setHours(23, 0, 0, 0);
+      const { formatedStartDate: start, formatedEndDate: end } = this.formatDate(startWeek, endWeek);
+      await this.classStore.deleteScheduleClass(start, end);
+
       const maxEventHoursPerDay = 8;
       const maxEventHoursPerSubject = 2; // Limite de 2 heures par événement
       const minEventHoursPerSubject = 1; // Minimum de 1 heure par événement
@@ -276,15 +282,17 @@ export default {
 
           if (!isOverlap) {
             // Aucun chevauchement trouvé, ajoutez l'événement de classe
-
-            const newEvent = {
+            const hours = " " + startDate.getHours().toString() + "h" + startDate.getMinutes().toString() + "  " + endDate.getHours().toString() + "h" + endDate.getMinutes().toString();
+            const newEvent = new DayPilot.Event({
               id: DayPilot.guid(),
               start: formatedStartDate,
               end: formatedEndDate,
               text: subject.text,
               subject_id: subject._id,
-            };
-            await this.classStore.postScheduleClass(Object.assign({}, newEvent));
+            });
+            newEvent.client.html(subject.text + "<br><span style='font-weight: normal; font-size: 16px;'>" + hours + "</span>");
+            console.log("🚀 ~ file: Calendar.vue:294 ~ addRandomScheduleClass ~ newEvent:", newEvent)
+            await this.classStore.postScheduleClass(Object.assign({}, newEvent.data));
             // Mettez à jour les heures restantes pour cette matière
             subject.weekHours -= eventDuration;
             // Mettez à jour les heures restantes pour la journée

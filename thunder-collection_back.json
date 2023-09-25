@@ -1,0 +1,156 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "back",
+    "dateExported": "2023-09-25T21:44:06.898Z",
+    "version": "1.1",
+    "folders": [
+        {
+            "_id": "a7bd9f54-6e82-42c5-bc4b-d46162c5c3c6",
+            "name": "scheduleJob",
+            "containerId": "",
+            "created": "2023-09-25T20:54:07.767Z",
+            "sortNum": 10000
+        },
+        {
+            "_id": "215ee8a7-5b22-4ad8-bde6-f672a44b88c4",
+            "name": "scheduleClass",
+            "containerId": "",
+            "created": "2023-09-25T20:54:56.008Z",
+            "sortNum": 20000
+        },
+        {
+            "_id": "b997490d-9554-4f95-a5ac-b0aeec29132a",
+            "name": "hoursSubject",
+            "containerId": "",
+            "created": "2023-09-25T20:55:15.808Z",
+            "sortNum": 30000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "37d7d7c5-dd78-41e9-8084-c0dc14c83aa1",
+            "colId": "865e0603-ef63-4621-a859-dfbabd6306ef",
+            "containerId": "a7bd9f54-6e82-42c5-bc4b-d46162c5c3c6",
+            "name": "getScheduleJob",
+            "url": "http://localhost:1631/api/v1/scheduleJob/getSchedule",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-09-25T20:54:25.453Z",
+            "modified": "2023-09-25T20:54:25.453Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "7eb73bb8-a7b7-4141-b902-57882f2fded2",
+            "colId": "865e0603-ef63-4621-a859-dfbabd6306ef",
+            "containerId": "215ee8a7-5b22-4ad8-bde6-f672a44b88c4",
+            "name": "getScheduleClass",
+            "url": "http://localhost:1631/api/v1/scheduleClass/getSchedule",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-09-25T20:54:58.089Z",
+            "modified": "2023-09-25T20:54:58.089Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "ad46b8b4-f913-46cb-acf2-054f7cab69ae",
+            "colId": "865e0603-ef63-4621-a859-dfbabd6306ef",
+            "containerId": "b997490d-9554-4f95-a5ac-b0aeec29132a",
+            "name": "getHoursSubject",
+            "url": "http://localhost:1631/api/v1/hoursSubject/gethoursSubject",
+            "method": "GET",
+            "sortNum": 10000,
+            "created": "2023-09-25T20:55:17.830Z",
+            "modified": "2023-09-25T20:55:17.830Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "bd3598e1-2a93-4f9f-a9a5-edf214fc7c69",
+            "colId": "865e0603-ef63-4621-a859-dfbabd6306ef",
+            "containerId": "a7bd9f54-6e82-42c5-bc4b-d46162c5c3c6",
+            "name": "postScheduleJob",
+            "url": "http://localhost:1631/api/v1/scheduleJob/postSchedule",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2023-09-25T20:54:27.274Z",
+            "modified": "2023-09-25T21:06:51.505Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"scheduleJobJoi\":\n    {\n    \"id\":\"2\",\n    \"newStart\":\"2023-09-04T06:00:00.000Z\",\n    \"newEnd\":\"2023-09-04T06:00:00.000Z\",\n    \"newText\":\"Décathlon\",\n    \"newHtml\": \"Décathlon<br><span style=\\\"font-weight: normal; font-size: 16px;\\\"> 3h30  5h30</span>\",\n    \"newJob\": true\n    }\n  \n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "faa3fe3b-0c92-40e4-b240-477083f4bba3",
+            "colId": "865e0603-ef63-4621-a859-dfbabd6306ef",
+            "containerId": "215ee8a7-5b22-4ad8-bde6-f672a44b88c4",
+            "name": "postScheduleClass",
+            "url": "http://localhost:1631/api/v1/scheduleClass/postSchedule",
+            "method": "POST",
+            "sortNum": 20000,
+            "created": "2023-09-25T20:54:59.565Z",
+            "modified": "2023-09-25T21:04:24.086Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"scheduleClassJoi\": {\n    \"id\": \"eheh64646725yeye\",\n    \"newStart\": \"2023-09-18T06:00:00.000Z\",\n    \"newEnd\": \"2023-09-18T08:00:00.000Z\",\n    \"newText\": \"Biochimie\",\n    \"newHtml\": \"Biochimie<br><span style=\\\"font-weight: normal; font-size: 16px;\\\"> 3h30  5h30</span>\",\n    \"subject_id\": \"6500a198ae2507564a499ff1\"\n  }\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "9937c910-2804-461d-8af6-f528e7de4564",
+            "colId": "865e0603-ef63-4621-a859-dfbabd6306ef",
+            "containerId": "a7bd9f54-6e82-42c5-bc4b-d46162c5c3c6",
+            "name": "deleteScheduleJob",
+            "url": "http://localhost:1631/api/v1/scheduleJob/deleteSchedule?id=371e0431-10cc-5b98-b1da-795050112d92",
+            "method": "DELETE",
+            "sortNum": 30000,
+            "created": "2023-09-25T20:54:28.494Z",
+            "modified": "2023-09-25T20:54:28.495Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "id",
+                    "value": "371e0431-10cc-5b98-b1da-795050112d92",
+                    "isPath": false
+                }
+            ],
+            "tests": []
+        },
+        {
+            "_id": "1f8686bc-d3a9-4d2c-81d6-4136abde9819",
+            "colId": "865e0603-ef63-4621-a859-dfbabd6306ef",
+            "containerId": "215ee8a7-5b22-4ad8-bde6-f672a44b88c4",
+            "name": "deleteScheduleClass",
+            "url": "http://localhost:1631/api/v1/scheduleClass/deleteSchedule?start=2023-09-18T00:00:00&end=2023-09-19T24:00:00",
+            "method": "DELETE",
+            "sortNum": 30000,
+            "created": "2023-09-25T20:55:00.851Z",
+            "modified": "2023-09-25T20:55:00.851Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "start",
+                    "value": "2023-09-18T00:00:00",
+                    "isPath": false
+                },
+                {
+                    "name": "end",
+                    "value": "2023-09-19T24:00:00",
+                    "isPath": false
+                }
+            ],
+            "tests": []
+        }
+    ]
+}

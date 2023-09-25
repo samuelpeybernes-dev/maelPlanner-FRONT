@@ -30,6 +30,7 @@ export const scheduleJob = defineStore("scheduleJob",{
             newStart: scheduleJob.start,
             newEnd: scheduleJob.end,
             newText: scheduleJob.text,
+            newHtml: scheduleJob.html,
             newJob: scheduleJob.job,
             newBackColor: scheduleJob.backColor,
             newBorderColor: scheduleJob.borderColor,
