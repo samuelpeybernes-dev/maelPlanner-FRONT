@@ -73,7 +73,7 @@ export default {
         onEventMoved: this.onEventMoved,
         onEventResized: this.onEventResized,
         onBeforeEventRender: this.onBeforeEventRender,
-        startDate: DayPilot.Date.today().firstDayOfWeek(),
+        startDate: DayPilot.Date.today().firstDayOfWeek(1),
       },
       combinedEvents: [],
       scheduleModal: {
@@ -215,8 +215,8 @@ export default {
       }
     },
     async addRandomScheduleClass() {
-      const startWeek = new Date(this.config.startDate.addDays(-6));
-      const endWeek = new Date(this.config.startDate);
+      const startWeek = new Date(this.config.startDate);
+      const endWeek = new Date(this.config.startDate.addDays(6));
       endWeek.setHours(23, 0, 0, 0);
       const { formatedStartDate: start, formatedEndDate: end } = this.formatDate(startWeek, endWeek);
       await this.classStore.deleteScheduleClass(start, end);
@@ -291,7 +291,6 @@ export default {
               subject_id: subject._id,
             });
             newEvent.client.html(subject.text + "<br><span style='font-weight: normal; font-size: 16px;'>" + hours + "</span>");
-            console.log("🚀 ~ file: Calendar.vue:294 ~ addRandomScheduleClass ~ newEvent:", newEvent)
             await this.classStore.postScheduleClass(Object.assign({}, newEvent.data));
             // Mettez à jour les heures restantes pour cette matière
             subject.weekHours -= eventDuration;
