@@ -120,7 +120,6 @@ export default {
         });
        newEvent.client.html(modal.title + "<br><span style='font-weight: normal; font-size: 16px;'>" + hours + "</span>");
         
-        console.log("🚀 ~ file: Calendar.vue:127 ~ addJob ~ newEvent:", newEvent.data)
         dp.clearSelection();
         dp.events.add(newEvent);
         await this.store.postScheduleJob(newEvent.data);
@@ -171,6 +170,7 @@ export default {
       }
     },
     async onEventResized(args) {
+   
       const hours = " " + args.newStart.getHours().toString() + "h" + args.newStart.getMinutes().toString() + "  " + args.newEnd.getHours().toString() + "h" + args.newEnd.getMinutes().toString();
       const updatedEvent = new DayPilot.Event({
         start: args.newStart,
@@ -388,9 +388,11 @@ export default {
 
 
   mounted: async function () {
+    this.isLoading = true;
     await this.loadJobEvents();
     await this.loadClassEvents();
     this.calendar.update({ events: this.combinedEvents });
+    this.isLoading = false;
   },
 }
 
