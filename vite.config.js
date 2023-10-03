@@ -9,15 +9,15 @@ let backPlannerUrl
 switch (process.env.PLANNER_SERVER) {
 
   case 'development':
-    backPlannerUrl = 'http://localhost:1631/api/v1/'
+    backPlannerUrl = 'http://127.0.0.1:1631/api/v1/'
     break
   case 'production':
     backPlannerUrl = 'https://mael-planner-back.vercel.app/api/v1/'
     break
   default:
-    backPlannerUrl = 'http://localhost:1631/api/v1/'
+    backPlannerUrl = 'http://127.0.0.1:1631/api/v1/'
     break
-}  
+} 
 // https://vitejs.dev/config/
 export default defineConfig({
   server: {

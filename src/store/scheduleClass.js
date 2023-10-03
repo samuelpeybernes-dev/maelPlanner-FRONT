@@ -15,6 +15,14 @@ export const scheduleClass = defineStore("scheduleClass", {
       try {
         const { data } = await axios.get(`/planner/scheduleClass/getSchedule`)
         this.scheduleClass = data.scheduleClass
+        for (const event of this.scheduleClass) {
+          const subject = event.subject?.[0];
+          if (subject && subject.backColor && subject.borderColor) {
+            // Affectation des couleurs directement
+            event.backColor = subject.backColor;
+            event.borderColor = subject.borderColor;
+          }
+        }
       }
       catch (error) {
         alert(error)
@@ -25,18 +33,20 @@ export const scheduleClass = defineStore("scheduleClass", {
     async postScheduleClass(scheduleClass) {
       try {
         const body = {
-          scheduleClassJoi: {
-            id: scheduleClass.id,
-            newStart: scheduleClass.start,
-            newEnd: scheduleClass.end,
-            newText: scheduleClass.text,
-            newHtml: scheduleClass.html,
-            subject_id: scheduleClass.subject_id,
-          },
+          scheduleClassJoi: scheduleClass.map((item) => ({
+            id: item.id,
+            newStart: item.start,
+            newEnd: item.end,
+            newText: item.text,
+            newHtml: item.html,
+            subject_id: item.subject_id,
+          })),
         }
         await axios.post(`/planner/scheduleClass/postSchedule`, body)
-        this.scheduleClass = this.scheduleClass.filter((scheduleClass) => scheduleClass.id !== scheduleClass.id)
-        this.scheduleClass.push(scheduleClass)
+        const idsToRemove = scheduleClass.map((item) => item.id);
+        this.scheduleClass = this.scheduleClass.filter((item) => !idsToRemove.includes(item.id));
+        this.scheduleClass.push(...scheduleClass);
+        console.log("🚀 ~ file: scheduleClass.js:41 ~ postScheduleClass ~ this.scheduleClass:", this.scheduleClass)
       }
       catch (error) {
         alert(error)

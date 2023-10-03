@@ -108,22 +108,22 @@ export default {
         const modal = scheduleModal;
         const args = this.selectedTimeRangeArgs;
         const dp = args.control;
-        const hours = " " + args.start.getHours().toString() + "h" + args.start.getMinutes().toString() + "  " + args.end.getHours().toString() + "h" + args.end.getMinutes().toString();
+        const hours = format(new Date(args.start), 'HH:mm') + "-" + format(new Date(args.end), 'HH:mm');
         const newEvent = new DayPilot.Event({
           start: args.start,
           end: args.end,
           id: DayPilot.guid(),
-          text: modal.title ,
+          text: modal.title,
           job: true,
           backColor: modal.selectedColor,
           borderColor: modal.selectedColor,
         });
-       newEvent.client.html(modal.title + "<br><span style='font-weight: normal; font-size: 16px;'>" + hours + "</span>");
-        
+        newEvent.client.html(modal.title + "<br><span style='font-weight: normal; font-size: 16px;'>" + hours + "</span>");
+
         dp.clearSelection();
         dp.events.add(newEvent);
-        await this.store.postScheduleJob(newEvent.data);
         this.scheduleModal.dialogLocal = scheduleModal.dialogLocal;
+        await this.store.postScheduleJob(newEvent.data);
       }
     },
     async onBeforeEventRender(args) {
@@ -151,32 +151,38 @@ export default {
       }
     },
     async onEventMoved(args) {
-      const hours = " " + args.newStart.getHours().toString() + "h" + args.newStart.getMinutes().toString() + "  " + args.newEnd.getHours().toString() + "h" + args.newEnd.getMinutes().toString();
+      const hours = format(new Date(args.newStart), 'HH:mm') + "-" + format(new Date(args.newEnd), 'HH:mm');
       const updatedEvent = new DayPilot.Event({
         start: args.newStart,
         end: args.newEnd,
         id: args.e.id(),
         text: args.e.text(),
+        backColor: args.e.data.backColor,
+        borderColor: args.e.data.borderColor,
         job: args.e.data.job,
         subject_id: args.e.data.subject_id,
       });
       updatedEvent.client.html(args.e.text() + "<br><span style='font-weight: normal; font-size: 16px;'>" + hours + "</span>");
       if (!args.e.data.job) {
-        await this.classStore.postScheduleClass(updatedEvent.data);
+        await this.classStore.postScheduleClass([updatedEvent.data]);
+
+        this.updateCombinedEvents(this.classStore.scheduleClass);
         console.log('Event moved: ' + args.e.text());
       } else {
         await this.store.postScheduleJob(updatedEvent.data);
+        this.updateCombinedEvents(this.store.scheduleJob);
         console.log('Event moved: ' + args.e.text());
       }
     },
     async onEventResized(args) {
-   
-      const hours = " " + args.newStart.getHours().toString() + "h" + args.newStart.getMinutes().toString() + "  " + args.newEnd.getHours().toString() + "h" + args.newEnd.getMinutes().toString();
+      const hours = format(new Date(args.newStart), 'HH:mm') + "-" + format(new Date(args.newEnd), 'HH:mm');
       const updatedEvent = new DayPilot.Event({
         start: args.newStart,
         end: args.newEnd,
         id: args.e.id(),
         text: args.e.text(),
+        backColor: args.e.data.backColor,
+        borderColor: args.e.data.borderColor,
         job: args.e.data.job,
       });
       updatedEvent.client.html(args.e.text() + "<br><span style='font-weight: normal; font-size: 16px;'>" + hours + "</span>");
@@ -184,35 +190,16 @@ export default {
         console.log('Cannot resize: ' + args.e.text());
       } else {
         await this.store.postScheduleJob(updatedEvent.data);
+        this.updateCombinedEvents(this.store.scheduleJob);
         console.log('Event resized: ' + args.e.text());
       }
     },
-
-    async loadJobEvents() {
-      if (this.store.scheduleJob.length === 0) {
-        await this.store.fetchScheduleJob();
-      }
+    async loadEvents() {
+      await this.store.fetchScheduleJob();
       this.combinedEvents.push(...this.store.scheduleJob);
-    },
-    async loadClassEvents() {
-
 
       await this.classStore.fetchScheduleClass();
       this.combinedEvents.push(...this.classStore.scheduleClass);
-
-      // Maintenant que nous avons ajouté les événements, nous pouvons formater les couleurs
-      this.formatEventColors(this.classStore.scheduleClass);
-
-    },
-    formatEventColors(events) {
-      for (const event of events) {
-        const subject = event.subject?.[0];
-        if (subject && subject.backColor && subject.borderColor) {
-          // Affectation des couleurs directement
-          event.backColor = subject.backColor;
-          event.borderColor = subject.borderColor;
-        }
-      }
     },
     async addRandomScheduleClass() {
       const startWeek = new Date(this.config.startDate);
@@ -229,6 +216,7 @@ export default {
       const lunchBreakEndHour = 13;
       let previousSubject = null;
       this.isLoading = true;
+      const newEvents = [];
       const weekDays = getCurrentWeekDays(this.config.startDate);
       // On récupere les heures disponibles pour chaque matière
       await this.hoursStore.fetchHoursSubject();
@@ -282,16 +270,18 @@ export default {
 
           if (!isOverlap) {
             // Aucun chevauchement trouvé, ajoutez l'événement de classe
-            const hours = " " + startDate.getHours().toString() + "h" + startDate.getMinutes().toString() + "  " + endDate.getHours().toString() + "h" + endDate.getMinutes().toString();
+            const hours = format(new Date(startDate), 'HH:mm') + "-" + format(new Date(endDate), 'HH:mm');
             const newEvent = new DayPilot.Event({
               id: DayPilot.guid(),
               start: formatedStartDate,
               end: formatedEndDate,
               text: subject.text,
+              backColor: subject.backColor,
+              borderColor: subject.borderColor,
               subject_id: subject._id,
             });
             newEvent.client.html(subject.text + "<br><span style='font-weight: normal; font-size: 16px;'>" + hours + "</span>");
-            await this.classStore.postScheduleClass(Object.assign({}, newEvent.data));
+            newEvents.push(Object.assign({}, newEvent.data));
             // Mettez à jour les heures restantes pour cette matière
             subject.weekHours -= eventDuration;
             // Mettez à jour les heures restantes pour la journée
@@ -302,10 +292,10 @@ export default {
           startDate = new Date(endDate);
         }
       }
-
       this.combinedEvents = [];
-      this.combinedEvents.push(...this.store.scheduleJob);
-      await this.loadClassEvents();
+      
+      await this.classStore.postScheduleClass(newEvents);
+      await this.loadEvents();
       this.calendar.update({ events: this.combinedEvents });
       this.isLoading = false;
 
@@ -383,14 +373,20 @@ export default {
       // Vérification des heures
       return dateHeureDebut < dateFin && dateDebut < dateHeureFin;
     },
+    updateCombinedEvents(sourceList) {
+      this.combinedEvents = this.combinedEvents.filter((existingItem) => {
+        return !sourceList.some((newItem) => newItem.id === existingItem.id);
+      });
+      this.combinedEvents.push(...sourceList);
+      this.calendar.update({ events: this.combinedEvents });
+    },
 
   },
 
 
   mounted: async function () {
     this.isLoading = true;
-    await this.loadJobEvents();
-    await this.loadClassEvents();
+    await this.loadEvents();
     this.calendar.update({ events: this.combinedEvents });
     this.isLoading = false;
   },
