@@ -13,7 +13,7 @@
                         <span class="text-h6">Couleur de l'événement :</span>
                     </v-card-title>
                     <v-card-text class="pb-0">
-                        <v-text-field density="compact" variant="solo" label="Search templates"
+                        <v-text-field density="compact" variant="solo" label="Chercher une couleur"
                             append-inner-icon="mdi-magnify" single-line hide-details @update:modelValue="searchColor($event)"
                             :model-value="search"></v-text-field>
                     </v-card-text>
