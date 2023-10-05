@@ -25,34 +25,28 @@ import { utcToZonedTime } from 'date-fns-tz'
 import getCurrentWeekDays from '../tools/utils/dates/getCurrentWeekDays.js'
 import scheduleModal from './scheduleModal.vue'
 import popupMenu from './popupMenu.vue'
+import { scheduleJob } from '../store/scheduleJob';
+import { scheduleClass } from '../store/scheduleClass';
+import { hoursSubject } from '../store/hoursSubject';
 export default {
   components: {
     DayPilotCalendar,
     scheduleModal,
     popupMenu,
   },
+  setup() {
+    return {
+      store: scheduleJob(),
+      classStore: scheduleClass(),
+      hoursStore: hoursSubject(),
+    };
+  },
   computed: {
-    // DayPilot.Calendar object - https://api.daypilot.org/daypilot-calendar-class/
     calendar: function () {
       return this.$refs.calendar.control
     },
   },
   name: 'Calendar',
-  props: {
-    store: {
-      type: Object,
-      required: true,
-    },
-    classStore: {
-      type: Object,
-      required: true,
-    },
-    hoursStore: {
-      type: Object,
-      required: true,
-    },
-
-  },
   data() {
     return {
       isLoading: false,
@@ -293,7 +287,7 @@ export default {
         }
       }
       this.combinedEvents = [];
-      
+
       await this.classStore.postScheduleClass(newEvents);
       await this.loadEvents();
       this.calendar.update({ events: this.combinedEvents });

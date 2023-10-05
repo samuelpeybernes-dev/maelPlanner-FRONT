@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import axios from "axios"
+import { axiosAuth } from '../hook/axios'
 
 export const scheduleClass = defineStore("scheduleClass", {
   state: () => ({
@@ -13,7 +13,7 @@ export const scheduleClass = defineStore("scheduleClass", {
   actions: {
     async fetchScheduleClass() {
       try {
-        const { data } = await axios.get(`/planner/scheduleClass/getSchedule`)
+        const { data } = await axiosAuth.get(`/scheduleClass/getSchedule`)
         this.scheduleClass = data.scheduleClass
         for (const event of this.scheduleClass) {
           const subject = event.subject?.[0];
@@ -42,7 +42,7 @@ export const scheduleClass = defineStore("scheduleClass", {
             subject_id: item.subject_id,
           })),
         }
-        await axios.post(`/planner/scheduleClass/postSchedule`, body)
+        await axiosAuth.post(`/scheduleClass/postSchedule`, body)
         const idsToRemove = scheduleClass.map((item) => item.id);
         this.scheduleClass = this.scheduleClass.filter((item) => !idsToRemove.includes(item.id));
         this.scheduleClass.push(...scheduleClass);
@@ -55,7 +55,7 @@ export const scheduleClass = defineStore("scheduleClass", {
     },
     async deleteScheduleClass(start, end) {
       try {
-        axios.delete(`/planner/scheduleClass/deleteSchedule?start=${start}&end=${end}`)
+        axiosAuth.get(`/scheduleClass/deleteSchedule?start=${start}&end=${end}`)
       }
       catch (error) {
         alert(error)

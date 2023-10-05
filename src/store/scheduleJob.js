@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import axios from "axios"
+import { axiosAuth } from '../hook/axios'
 
 export const scheduleJob = defineStore("scheduleJob",{
     state: () => ({
@@ -13,7 +13,7 @@ export const scheduleJob = defineStore("scheduleJob",{
     actions: {
       async fetchScheduleJob() {
         try {
-            const { data } = await axios.get(`/planner/scheduleJob/getSchedule`)
+            const { data } = await axiosAuth.get(`/scheduleJob/getSchedule`)
             this.scheduleJob = data.scheduleJob           
           }
           catch (error) {
@@ -36,7 +36,7 @@ export const scheduleJob = defineStore("scheduleJob",{
             newBorderColor: scheduleJob.borderColor,
           },
         }
-        await axios.post(`/planner/scheduleJob/postSchedule`, body)
+        await axiosAuth.post(`/scheduleJob/postSchedule`, body)
         this.scheduleJob = this.scheduleJob.filter((scheduleJob) => scheduleJob.id !== scheduleJob.id)
         this.scheduleJob.push(scheduleJob)
       }
@@ -48,7 +48,7 @@ export const scheduleJob = defineStore("scheduleJob",{
 
       async deleteScheduleJob(scheduleJobId) {
         try {
-          axios.delete(`/planner/scheduleJob/deleteSchedule?id=${scheduleJobId}`)
+          axiosAuth.delete(`/scheduleJob/deleteSchedule?id=${scheduleJobId}`)
           this.scheduleJob = this.scheduleJob.filter((scheduleJob) => scheduleJob.id !== scheduleJobId)
           }
           catch (error) {

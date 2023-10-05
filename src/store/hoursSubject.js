@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import axios from "axios"
+import { axiosAuth } from '../hook/axios'
 
 export const hoursSubject = defineStore("hoursSubject",{
     state: () => ({
@@ -13,7 +13,7 @@ export const hoursSubject = defineStore("hoursSubject",{
     actions: {
       async fetchHoursSubject() {
         try {
-            const { data } = await axios.get(`/planner/hoursSubject/gethoursSubject`)
+            const { data } = await axiosAuth.get(`/hoursSubject/gethoursSubject`)
             this.hoursSubject = data.hoursSubject           
           }
           catch (error) {
