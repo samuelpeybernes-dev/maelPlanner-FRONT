@@ -12,6 +12,7 @@
     "@daypilot/daypilot-lite-vue": "^3.17.0",
     "@mdi/font": "^7.2.96",
     "axios": "^1.5.1",
+    "axios-auth-refresh": "^3.3.6",
     "date-fns": "^2.30.0",
     "date-fns-tz": "^2.0.0",
     "dotenv": "^16.3.1",

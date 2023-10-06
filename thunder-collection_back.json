@@ -1,84 +1,95 @@
 {
     "client": "Thunder Client",
     "collectionName": "back",
-    "dateExported": "2023-09-25T21:44:06.898Z",
+    "dateExported": "2023-10-06T22:48:02.877Z",
     "version": "1.1",
     "folders": [
         {
-            "_id": "a7bd9f54-6e82-42c5-bc4b-d46162c5c3c6",
+            "_id": "1dde1bf9-d19f-4176-9735-c5017f0353d2",
             "name": "scheduleJob",
             "containerId": "",
-            "created": "2023-09-25T20:54:07.767Z",
+            "created": "2023-10-06T08:52:44.794Z",
             "sortNum": 10000
         },
         {
-            "_id": "215ee8a7-5b22-4ad8-bde6-f672a44b88c4",
+            "_id": "51125328-1fac-4e2c-8c50-c8a98edbb065",
             "name": "scheduleClass",
             "containerId": "",
-            "created": "2023-09-25T20:54:56.008Z",
+            "created": "2023-10-06T08:52:44.795Z",
             "sortNum": 20000
         },
         {
-            "_id": "b997490d-9554-4f95-a5ac-b0aeec29132a",
+            "_id": "5cb6af5e-9f34-46d9-85ed-e551de46b03b",
             "name": "hoursSubject",
             "containerId": "",
-            "created": "2023-09-25T20:55:15.808Z",
+            "created": "2023-10-06T08:52:44.796Z",
             "sortNum": 30000
+        },
+        {
+            "_id": "ff5d477c-a73d-4982-91fb-d2bbf1aa512a",
+            "name": "user",
+            "containerId": "",
+            "created": "2023-10-06T08:52:44.797Z",
+            "sortNum": 40000
         }
     ],
     "requests": [
         {
-            "_id": "37d7d7c5-dd78-41e9-8084-c0dc14c83aa1",
-            "colId": "865e0603-ef63-4621-a859-dfbabd6306ef",
-            "containerId": "a7bd9f54-6e82-42c5-bc4b-d46162c5c3c6",
+            "_id": "41b59f9c-a7c8-4f21-a794-ec2ac4e09c84",
+            "colId": "2af39bcf-7a6e-495e-b71c-f6b8057d5ae7",
+            "containerId": "1dde1bf9-d19f-4176-9735-c5017f0353d2",
             "name": "getScheduleJob",
             "url": "http://localhost:1631/api/v1/scheduleJob/getSchedule",
             "method": "GET",
             "sortNum": 10000,
-            "created": "2023-09-25T20:54:25.453Z",
-            "modified": "2023-09-25T20:54:25.453Z",
+            "created": "2023-10-06T08:52:44.794Z",
+            "modified": "2023-10-06T22:16:12.452Z",
             "headers": [],
             "params": [],
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTFlYjgzZDI0YWQyN2IxNTg0MTM0ZTgiLCJpYXQiOjE2OTY2MzAyODksImV4cCI6MTY5NjYzMDM0OX0.IbtsE4yEoB39D9acCrYL9bXtsTTbwVnUeackPQeLErs"
+            },
             "tests": []
         },
         {
-            "_id": "7eb73bb8-a7b7-4141-b902-57882f2fded2",
-            "colId": "865e0603-ef63-4621-a859-dfbabd6306ef",
-            "containerId": "215ee8a7-5b22-4ad8-bde6-f672a44b88c4",
+            "_id": "bf79af1f-34d4-4e87-922e-b3f7a26fdef4",
+            "colId": "2af39bcf-7a6e-495e-b71c-f6b8057d5ae7",
+            "containerId": "51125328-1fac-4e2c-8c50-c8a98edbb065",
             "name": "getScheduleClass",
             "url": "http://localhost:1631/api/v1/scheduleClass/getSchedule",
             "method": "GET",
             "sortNum": 10000,
-            "created": "2023-09-25T20:54:58.089Z",
-            "modified": "2023-09-25T20:54:58.089Z",
+            "created": "2023-10-06T08:52:44.798Z",
+            "modified": "2023-10-06T08:52:44.798Z",
             "headers": [],
             "params": [],
             "tests": []
         },
         {
-            "_id": "ad46b8b4-f913-46cb-acf2-054f7cab69ae",
-            "colId": "865e0603-ef63-4621-a859-dfbabd6306ef",
-            "containerId": "b997490d-9554-4f95-a5ac-b0aeec29132a",
+            "_id": "efc7be0a-bcf8-4a11-be08-373b2b710e37",
+            "colId": "2af39bcf-7a6e-495e-b71c-f6b8057d5ae7",
+            "containerId": "5cb6af5e-9f34-46d9-85ed-e551de46b03b",
             "name": "getHoursSubject",
             "url": "http://localhost:1631/api/v1/hoursSubject/gethoursSubject",
             "method": "GET",
             "sortNum": 10000,
-            "created": "2023-09-25T20:55:17.830Z",
-            "modified": "2023-09-25T20:55:17.830Z",
+            "created": "2023-10-06T08:52:44.801Z",
+            "modified": "2023-10-06T08:52:44.801Z",
             "headers": [],
             "params": [],
             "tests": []
         },
         {
-            "_id": "bd3598e1-2a93-4f9f-a9a5-edf214fc7c69",
-            "colId": "865e0603-ef63-4621-a859-dfbabd6306ef",
-            "containerId": "a7bd9f54-6e82-42c5-bc4b-d46162c5c3c6",
+            "_id": "9f4901b5-9c33-409d-8351-68e683b3a3e5",
+            "colId": "2af39bcf-7a6e-495e-b71c-f6b8057d5ae7",
+            "containerId": "1dde1bf9-d19f-4176-9735-c5017f0353d2",
             "name": "postScheduleJob",
             "url": "http://localhost:1631/api/v1/scheduleJob/postSchedule",
             "method": "POST",
             "sortNum": 20000,
-            "created": "2023-09-25T20:54:27.274Z",
-            "modified": "2023-09-25T21:06:51.505Z",
+            "created": "2023-10-06T08:52:44.796Z",
+            "modified": "2023-10-06T08:52:44.796Z",
             "headers": [],
             "params": [],
             "body": {
@@ -89,34 +100,34 @@
             "tests": []
         },
         {
-            "_id": "faa3fe3b-0c92-40e4-b240-477083f4bba3",
-            "colId": "865e0603-ef63-4621-a859-dfbabd6306ef",
-            "containerId": "215ee8a7-5b22-4ad8-bde6-f672a44b88c4",
+            "_id": "4d3a789b-7bc3-4d23-b02f-9e1d3a723ea2",
+            "colId": "2af39bcf-7a6e-495e-b71c-f6b8057d5ae7",
+            "containerId": "51125328-1fac-4e2c-8c50-c8a98edbb065",
             "name": "postScheduleClass",
             "url": "http://localhost:1631/api/v1/scheduleClass/postSchedule",
             "method": "POST",
             "sortNum": 20000,
-            "created": "2023-09-25T20:54:59.565Z",
-            "modified": "2023-09-25T21:04:24.086Z",
+            "created": "2023-10-06T08:52:44.799Z",
+            "modified": "2023-10-06T08:52:44.799Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"scheduleClassJoi\": {\n    \"id\": \"eheh64646725yeye\",\n    \"newStart\": \"2023-09-18T06:00:00.000Z\",\n    \"newEnd\": \"2023-09-18T08:00:00.000Z\",\n    \"newText\": \"Biochimie\",\n    \"newHtml\": \"Biochimie<br><span style=\\\"font-weight: normal; font-size: 16px;\\\"> 3h30  5h30</span>\",\n    \"subject_id\": \"6500a198ae2507564a499ff1\"\n  }\n}",
+                "raw": "{\n  \"scheduleClassJoi\": [\n    {\n      \"id\": \"eheh64646725yeye\",\n      \"newStart\": \"2023-09-18T06:00:00.000Z\",\n      \"newEnd\": \"2023-09-18T08:00:00.000Z\",\n      \"newText\": \"Biochimie\",\n      \"newHtml\": \"Biochimie<br><span style=\\\"font-weight: normal; font-size: 16px;\\\"> 3h30  5h30</span>\",\n      \"subject_id\": \"6500a198ae2507564a499ff1\"\n    },\n    {\n      \"id\": \"eheh6fbhejfzj88\",\n      \"newStart\": \"2023-09-18T09:00:00.000Z\",\n      \"newEnd\": \"2023-09-18T10:00:00.000Z\",\n      \"newText\": \"MicroToxicoViro\",\n      \"newHtml\": \"MicroToxicoViro<br><span style=\\\"font-weight: normal; font-size: 16px;\\\"> 3h30  5h30</span>\",\n      \"subject_id\": \"6500a1c2ae2507564a499ff2\"\n    }\n  ]\n}",
                 "form": []
             },
             "tests": []
         },
         {
-            "_id": "9937c910-2804-461d-8af6-f528e7de4564",
-            "colId": "865e0603-ef63-4621-a859-dfbabd6306ef",
-            "containerId": "a7bd9f54-6e82-42c5-bc4b-d46162c5c3c6",
+            "_id": "1cbacf2b-55dd-4b39-96b6-d2579f76f8f3",
+            "colId": "2af39bcf-7a6e-495e-b71c-f6b8057d5ae7",
+            "containerId": "1dde1bf9-d19f-4176-9735-c5017f0353d2",
             "name": "deleteScheduleJob",
             "url": "http://localhost:1631/api/v1/scheduleJob/deleteSchedule?id=371e0431-10cc-5b98-b1da-795050112d92",
             "method": "DELETE",
             "sortNum": 30000,
-            "created": "2023-09-25T20:54:28.494Z",
-            "modified": "2023-09-25T20:54:28.495Z",
+            "created": "2023-10-06T08:52:44.797Z",
+            "modified": "2023-10-06T08:52:44.797Z",
             "headers": [],
             "params": [
                 {
@@ -128,15 +139,15 @@
             "tests": []
         },
         {
-            "_id": "1f8686bc-d3a9-4d2c-81d6-4136abde9819",
-            "colId": "865e0603-ef63-4621-a859-dfbabd6306ef",
-            "containerId": "215ee8a7-5b22-4ad8-bde6-f672a44b88c4",
+            "_id": "747dd00e-db84-482e-a6f7-052542805aea",
+            "colId": "2af39bcf-7a6e-495e-b71c-f6b8057d5ae7",
+            "containerId": "51125328-1fac-4e2c-8c50-c8a98edbb065",
             "name": "deleteScheduleClass",
             "url": "http://localhost:1631/api/v1/scheduleClass/deleteSchedule?start=2023-09-18T00:00:00&end=2023-09-19T24:00:00",
             "method": "DELETE",
             "sortNum": 30000,
-            "created": "2023-09-25T20:55:00.851Z",
-            "modified": "2023-09-25T20:55:00.851Z",
+            "created": "2023-10-06T08:52:44.800Z",
+            "modified": "2023-10-06T08:52:44.800Z",
             "headers": [],
             "params": [
                 {
@@ -150,6 +161,63 @@
                     "isPath": false
                 }
             ],
+            "tests": []
+        },
+        {
+            "_id": "303c8d4b-d655-41ab-8d28-fc5e342df64a",
+            "colId": "2af39bcf-7a6e-495e-b71c-f6b8057d5ae7",
+            "containerId": "ff5d477c-a73d-4982-91fb-d2bbf1aa512a",
+            "name": "login",
+            "url": "http://localhost:1631/api/v1/guest/login",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2023-10-06T08:52:44.802Z",
+            "modified": "2023-10-06T10:42:26.544Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"samuelpeybernes33@gmail.com\",\n  \"password\": \"test\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "b0b7bbb8-4283-4c9a-a33c-1881f2cb782c",
+            "colId": "2af39bcf-7a6e-495e-b71c-f6b8057d5ae7",
+            "containerId": "ff5d477c-a73d-4982-91fb-d2bbf1aa512a",
+            "name": "refreshToken",
+            "url": "http://localhost:1631/api/v1/guest/refresh-token",
+            "method": "POST",
+            "sortNum": 45000,
+            "created": "2023-10-06T10:41:54.428Z",
+            "modified": "2023-10-06T15:22:52.615Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"refreshToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTFlYjgzZDI0YWQyN2IxNTg0MTM0ZTgiLCJpYXQiOjE2OTY2MDQ5NDQsImV4cCI6MTY5OTE5Njk0NH0.YzAVbTJX-P81C-PbjwRZ9J_KhvyMmWyr4o08N5Jcn9A\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "bc8e2487-82e1-417f-9cac-86179a0da1f4",
+            "colId": "2af39bcf-7a6e-495e-b71c-f6b8057d5ae7",
+            "containerId": "ff5d477c-a73d-4982-91fb-d2bbf1aa512a",
+            "name": "register",
+            "url": "http://localhost:1631/api/v1/guest/register",
+            "method": "POST",
+            "sortNum": 50000,
+            "created": "2023-10-06T08:52:44.803Z",
+            "modified": "2023-10-06T22:44:53.391Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"Mael\",\n  \"email\": \"petris.mael02@gmail.com\",\n  \"password\": \"Jenesaispas00\"\n}",
+                "form": []
+            },
             "tests": []
         }
     ]
