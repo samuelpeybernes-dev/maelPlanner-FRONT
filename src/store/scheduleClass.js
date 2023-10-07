@@ -1,20 +1,16 @@
-import { defineStore } from 'pinia'
-import { axiosAuth } from '../hook/axios'
+import { defineStore } from "pinia";
+import { axiosAuth } from "../hook/axios";
 
 export const scheduleClass = defineStore("scheduleClass", {
   state: () => ({
-    scheduleClass: [
-
-    ],
+    scheduleClass: [],
   }),
-  getters: {
-
-  },
+  getters: {},
   actions: {
     async fetchScheduleClass() {
       try {
-        const { data } = await axiosAuth.get(`/scheduleClass/getSchedule`)
-        this.scheduleClass = data.scheduleClass
+        const { data } = await axiosAuth.get(`/scheduleClass/getSchedule`);
+        this.scheduleClass = data.scheduleClass;
         for (const event of this.scheduleClass) {
           const subject = event.subject?.[0];
           if (subject && subject.backColor && subject.borderColor) {
@@ -23,10 +19,9 @@ export const scheduleClass = defineStore("scheduleClass", {
             event.borderColor = subject.borderColor;
           }
         }
-      }
-      catch (error) {
-        alert(error)
-        console.log(error)
+      } catch (error) {
+        alert(error);
+        console.log(error);
       }
     },
 
@@ -41,26 +36,27 @@ export const scheduleClass = defineStore("scheduleClass", {
             newHtml: item.html,
             subject_id: item.subject_id,
           })),
-        }
-        await axiosAuth.post(`/scheduleClass/postSchedule`, body)
+        };
+        await axiosAuth.post(`/scheduleClass/postSchedule`, body);
         const idsToRemove = scheduleClass.map((item) => item.id);
-        this.scheduleClass = this.scheduleClass.filter((item) => !idsToRemove.includes(item.id));
+        this.scheduleClass = this.scheduleClass.filter(
+          (item) => !idsToRemove.includes(item.id)
+        );
         this.scheduleClass.push(...scheduleClass);
-        console.log("🚀 ~ file: scheduleClass.js:41 ~ postScheduleClass ~ this.scheduleClass:", this.scheduleClass)
-      }
-      catch (error) {
-        alert(error)
-        console.log(error)
+      } catch (error) {
+        alert(error);
+        console.log(error);
       }
     },
     async deleteScheduleClass(start, end) {
       try {
-        axiosAuth.get(`/scheduleClass/deleteSchedule?start=${start}&end=${end}`)
-      }
-      catch (error) {
-        alert(error)
-        console.log(error)
+        await axiosAuth.delete(
+          `/scheduleClass/deleteSchedule?start=${start}&end=${end}`
+        );
+      } catch (error) {
+        alert(error);
+        console.log(error);
       }
     },
   },
-})
+});
