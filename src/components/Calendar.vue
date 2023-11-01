@@ -46,6 +46,7 @@ export default {
       return this.$refs.calendar.control
     },
   },
+  // eslint-disable-next-line vue/multi-word-component-names
   name: 'Calendar',
   data() {
     return {
@@ -131,7 +132,6 @@ export default {
     },
     async onTimeRangeSelected(args) {
       this.scheduleModal.dialogLocal = true;
-      const dp = args.control;
       this.selectedTimeRangeArgs = args;
 
     },

@@ -1,7 +1,7 @@
 {
     "client": "Thunder Client",
     "collectionName": "back",
-    "dateExported": "2023-10-06T22:48:02.877Z",
+    "dateExported": "2023-11-01T21:00:47.118Z",
     "version": "1.1",
     "folders": [
         {
@@ -43,12 +43,12 @@
             "method": "GET",
             "sortNum": 10000,
             "created": "2023-10-06T08:52:44.794Z",
-            "modified": "2023-10-06T22:16:12.452Z",
+            "modified": "2023-10-27T20:29:04.499Z",
             "headers": [],
             "params": [],
             "auth": {
                 "type": "bearer",
-                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTFlYjgzZDI0YWQyN2IxNTg0MTM0ZTgiLCJpYXQiOjE2OTY2MzAyODksImV4cCI6MTY5NjYzMDM0OX0.IbtsE4yEoB39D9acCrYL9bXtsTTbwVnUeackPQeLErs"
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTIwOGRlNTY2YTE0N2E4YjBmNDIwOWEiLCJpYXQiOjE2OTg0Mzg1MzQsImV4cCI6MTY5ODQzOTQzNH0.HkceTTIcAZ5PCr8LduAoVNKFokK_fPmXcjPxgkRT9bc"
             },
             "tests": []
         },
@@ -172,12 +172,12 @@
             "method": "POST",
             "sortNum": 40000,
             "created": "2023-10-06T08:52:44.802Z",
-            "modified": "2023-10-06T10:42:26.544Z",
+            "modified": "2023-10-27T20:25:09.617Z",
             "headers": [],
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"email\": \"samuelpeybernes33@gmail.com\",\n  \"password\": \"test\"\n}",
+                "raw": "{\n  \"email\": \"petris.mael02@gmail.com\",\n  \"password\": \"Jenesaispas00\"\n}",
                 "form": []
             },
             "tests": []
@@ -217,6 +217,59 @@
                 "type": "json",
                 "raw": "{\n  \"name\": \"Mael\",\n  \"email\": \"petris.mael02@gmail.com\",\n  \"password\": \"Jenesaispas00\"\n}",
                 "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "3b3f5881-f3ae-4f2f-b9fe-758e59020203",
+            "colId": "2af39bcf-7a6e-495e-b71c-f6b8057d5ae7",
+            "containerId": "ff5d477c-a73d-4982-91fb-d2bbf1aa512a",
+            "name": "updateCustom",
+            "url": "http://localhost:1631/api/v1/user/postCustomization?email=samuelpeybernes33@gmail.com",
+            "method": "POST",
+            "sortNum": 60000,
+            "created": "2023-10-27T21:20:21.328Z",
+            "modified": "2023-11-01T20:59:46.246Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "email",
+                    "value": "samuelpeybernes33@gmail.com",
+                    "isPath": false
+                }
+            ],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"userJoi\": {\n    \"maxEventHoursPerDay\": 15,\n    \"lunchBreakStartHour\": 11,\n    \"lunchBreakEndHour\": 13,\n    \"startHour\": 9\n  }\n}",
+                "form": []
+            },
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTIwOGRlNTY2YTE0N2E4YjBmNDIwOWEiLCJpYXQiOjE2OTg0NDU4NTcsImV4cCI6MTY5ODQ0Njc1N30.MNxUWAyu8K_6LPlb_75eWOCoUf6aZj8zw89XeMv2_X8"
+            },
+            "tests": []
+        },
+        {
+            "_id": "bd7f29b1-c413-460d-a2b5-78ec46ba0412",
+            "colId": "2af39bcf-7a6e-495e-b71c-f6b8057d5ae7",
+            "containerId": "ff5d477c-a73d-4982-91fb-d2bbf1aa512a",
+            "name": "getProfil",
+            "url": "http://localhost:1631/api/v1/user/getCustomization?email=samuelpeybernes33@gmail.com",
+            "method": "GET",
+            "sortNum": 70000,
+            "created": "2023-10-27T22:28:49.470Z",
+            "modified": "2023-10-27T22:32:45.107Z",
+            "headers": [],
+            "params": [
+                {
+                    "name": "email",
+                    "value": "samuelpeybernes33@gmail.com",
+                    "isPath": false
+                }
+            ],
+            "auth": {
+                "type": "bearer",
+                "bearer": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTIwOGRlNTY2YTE0N2E4YjBmNDIwOWEiLCJpYXQiOjE2OTg0NDU4NTcsImV4cCI6MTY5ODQ0Njc1N30.MNxUWAyu8K_6LPlb_75eWOCoUf6aZj8zw89XeMv2_X8"
             },
             "tests": []
         }
