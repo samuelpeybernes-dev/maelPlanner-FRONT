@@ -9,6 +9,17 @@ export const user = defineStore("user", {
   }),
   getters: {},
   actions: {
+    async fetchUserProfil() {
+      try {
+        const { data } = await axiosAuth.get(`/user/getCustomization`);
+        this.user = data;
+        console.log("🚀 ~ file: user.js:16 ~ fetchUserProfil ~ data:", data);
+      } catch (error) {
+        alert(error);
+        console.log(error);
+      }
+    },
+
     async postLogin(userData) {
       try {
         const body = {
