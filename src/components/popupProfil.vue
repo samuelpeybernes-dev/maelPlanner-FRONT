@@ -59,10 +59,10 @@ export default {
     },
     data() {
         const customElement = {
-            startHour: 0,
-            lunchBreakStartHour: 0,
-            lunchBreakEndHour: 0,
-            maxEventHoursPerDay: 0,
+            startHour: 8,
+            lunchBreakStartHour: 12,
+            lunchBreakEndHour: 13,
+            maxEventHoursPerDay: 8,
         }
         return {
             dialogLocal: false,
