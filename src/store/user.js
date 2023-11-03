@@ -9,10 +9,10 @@ export const user = defineStore("user", {
   }),
   getters: {},
   actions: {
-    async fetchUserProfil(userToken) {
+    async fetchUserProfil(userId) {
       try {
         const { data } = await axiosAuth.get(
-          `/user/getCustomization?token=${userToken}`
+          `/user/getCustomization?_id=${userId}`
         );
         this.user = data.profil;
       } catch (error) {
@@ -21,7 +21,7 @@ export const user = defineStore("user", {
       }
     },
 
-    async postUserProfil(userToken, customElement) {
+    async postUserProfil(userId, customElement) {
       try {
         const body = {
           userJoi: {
@@ -32,7 +32,7 @@ export const user = defineStore("user", {
           },
         };
         await axiosAuth.post(
-          `/user/postCustomization?token=${userToken}`,
+          `/user/postCustomization?_id=${userId}`,
           body
         );
       } catch (error) {
@@ -59,6 +59,7 @@ export const user = defineStore("user", {
 
         localStorage.setItem("token", resp.data.accessToken);
         localStorage.setItem("refreshToken", resp.data.refreshToken);
+        localStorage.setItem("_id", resp.data.id);
         axiosAuth.defaults.headers.common["Authorization"] =
           "Bearer " + resp.data.accessToken;
       } catch (error) {

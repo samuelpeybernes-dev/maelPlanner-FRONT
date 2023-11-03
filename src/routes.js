@@ -21,7 +21,8 @@ const router = VueRouter.createRouter({
 router.beforeEach((to, from, next) => {
   const userStore = user();
   const token = localStorage.getItem("token");
-  if (token) {
+  const id = localStorage.getItem("_id");
+  if (token && id) {
     userStore.user.auth = true;
   }
   if (!userStore.user.auth && to.name !== "Login" && to.meta.requiredAuth) {
