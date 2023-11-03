@@ -79,7 +79,9 @@ export default {
         async cancel() {
             this.dialogLocal = false;
             await this.store.fetchUserProfil(localStorage.getItem("token"));
-            this.customElement = this.store.user;
+            if (this.store.user.startHour != null) {
+                this.customElement = this.store.user;
+            }
         },
         async updateProfil() {
             await this.store.postUserProfil(localStorage.getItem("token"), this.customElement)
@@ -87,7 +89,9 @@ export default {
     },
     async beforeCreate() {
         await this.store.fetchUserProfil(localStorage.getItem("token"));
-        this.customElement = this.store.user;
+        if (this.store.user.startHour != null) {
+            this.customElement = this.store.user;
+        }
     },
 };
 </script>
