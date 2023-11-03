@@ -11,9 +11,10 @@
   </div>
   <scheduleModal v-on:validated="addJob" v-on:canceled="cancelJob" :dialog="scheduleModal.dialogLocal"></scheduleModal>
   <div class="fixed bottom-4 right-4">
-    <v-btn class="m-0.5" color="purple" icon="mdi-arrow-left" v-on:click="navigatePrevious"></v-btn>
-    <v-btn class="m-0.5" color="purple" icon="mdi-calendar-today" v-on:click="navigateToday"></v-btn>
-    <v-btn class="m-0.5" color="purple" icon="mdi-arrow-right" v-on:click="navigateNext"></v-btn>
+    <popupProfil class="m-0.5" v-on:validated="validateProfil" />
+    <v-btn class="m-0.5" color="#c026d3" icon="mdi-arrow-left" v-on:click="navigatePrevious"></v-btn>
+    <v-btn class="m-0.5" color="#c026d3" icon="mdi-calendar-today" v-on:click="navigateToday"></v-btn>
+    <v-btn class="m-0.5" color="#c026d3" icon="mdi-arrow-right" v-on:click="navigateNext"></v-btn>
     <popupMenu class="m-0.5" v-on:generated="addRandomScheduleClass"></popupMenu>
   </div>
 </template>
@@ -25,20 +26,24 @@ import { utcToZonedTime } from 'date-fns-tz'
 import getCurrentWeekDays from '../tools/utils/dates/getCurrentWeekDays.js'
 import scheduleModal from './scheduleModal.vue'
 import popupMenu from './popupMenu.vue'
+import popupProfil from "./popupProfil.vue";
 import { scheduleJob } from '../store/scheduleJob';
 import { scheduleClass } from '../store/scheduleClass';
 import { hoursSubject } from '../store/hoursSubject';
+import { user } from "../store/user";
 export default {
   components: {
     DayPilotCalendar,
     scheduleModal,
     popupMenu,
+    popupProfil,
   },
   setup() {
     return {
       store: scheduleJob(),
       classStore: scheduleClass(),
       hoursStore: hoursSubject(),
+      userStore: user(),
     };
   },
   computed: {
@@ -70,6 +75,12 @@ export default {
         onBeforeEventRender: this.onBeforeEventRender,
         startDate: DayPilot.Date.today().firstDayOfWeek(1),
       },
+      userData: {
+        startHour: 8,
+        lunchBreakStartHour: 12,
+        lunchBreakEndHour: 13,
+        maxEventHoursPerDay: 8,
+      },
       combinedEvents: [],
       scheduleModal: {
         title: "",
@@ -81,6 +92,9 @@ export default {
     };
   },
   methods: {
+    validateProfil(customElement) {
+      this.userData = customElement;
+    },
     navigatePrevious() {
       this.config.startDate = this.config.startDate.addDays(-7);
     },
@@ -122,6 +136,7 @@ export default {
       }
     },
     async onBeforeEventRender(args) {
+
       if (!args.data.job) {
         args.data.deleteDisabled = true;
         args.data.resizeDisabled = true;
@@ -202,12 +217,14 @@ export default {
       const { formatedStartDate: start, formatedEndDate: end } = this.formatDate(startWeek, endWeek);
       await this.classStore.deleteScheduleClass(start, end);
 
-      const maxEventHoursPerDay = 8;
+      const maxEventHoursPerDay = this.userData.maxEventHoursPerDay;
+      console.log("🚀 ~ file: Calendar.vue:224 ~ addRandomScheduleClass ~ this.customData.maxEventHoursPerDay:", this.userData.maxEventHoursPerDay)
       const maxEventHoursPerSubject = 2; // Limite de 2 heures par événement
       const minEventHoursPerSubject = 1; // Minimum de 1 heure par événement
       const minEventHoursFor30MinWeekHours = 0.5; // Minimum de 30 minutes si weekHours est de 30 minutes
-      const lunchBreakStartHour = 12;
-      const lunchBreakEndHour = 13;
+      const lunchBreakStartHour = this.userData.lunchBreakStartHour;
+      const lunchBreakEndHour = this.userData.lunchBreakEndHour;
+      const startHour = this.userData.startHour;
       let previousSubject = null;
       this.isLoading = true;
       const newEvents = [];
@@ -221,7 +238,7 @@ export default {
         let startDate = new Date(day.date);
         let subject = null;
         // On s'assure que le premier événement commence à 9h
-        startDate.setHours(9, 0, 0, 0);
+        startDate.setHours(startHour, 0, 0, 0);
 
         // Tant qu'il reste des heures d'événement à ajouter
         while (remainingEventHours > 0) {
@@ -379,6 +396,7 @@ export default {
 
 
   mounted: async function () {
+
     this.isLoading = true;
     await this.loadEvents();
     this.calendar.update({ events: this.combinedEvents });
