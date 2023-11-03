@@ -5,15 +5,21 @@ export const user = defineStore("user", {
   state: () => ({
     user: {
       auth: false,
+      email: "",
     },
   }),
   getters: {},
   actions: {
-    async fetchUserProfil() {
+    async fetchUserProfil(userEmail) {
       try {
-        const { data } = await axiosAuth.get(`/user/getCustomization`);
+        const { data } = await axiosAuth.get(
+          `/user/getCustomization?email=${userEmail}`
+        );
         this.user = data;
-        console.log("🚀 ~ file: user.js:16 ~ fetchUserProfil ~ data:", data);
+        console.log(
+          "🚀 ~ file: user.js:16 ~ fetchUserProfil ~ data:",
+          this.user
+        );
       } catch (error) {
         alert(error);
         console.log(error);

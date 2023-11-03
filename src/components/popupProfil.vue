@@ -21,21 +21,29 @@
         <v-list lines="two" subheader>
           <v-list-subheader>Réglages </v-list-subheader>
           <v-list-item title="Nombres d'heures maximum par jour"></v-list-item>
-          <v-list-item
-            title="Password"
-            subtitle="Require password for purchase or use password to restrict purchase"
-          ></v-list-item>
         </v-list>
         <v-divider></v-divider>
         <v-list lines="two" subheader>
           <v-list-subheader>General</v-list-subheader>
+          <v-list-item title="Nom">{{
+            this.store.user.profil.name
+          }}</v-list-item>
+          <v-list-item title="Email">{{
+            this.store.user.profil.email
+          }}</v-list-item>
         </v-list>
       </v-card>
     </v-dialog>
   </v-row>
 </template>
 <script>
+import { user } from "../store/user";
 export default {
+  setup() {
+    return {
+      store: user(),
+    };
+  },
   props: {
     openProfil: Boolean,
   },
@@ -54,6 +62,14 @@ export default {
       this.dialogLocal = false;
       this.$emit("canceled", this.dialogLocal);
     },
+  },
+  beforeCreate() {
+    console.log(
+      "🚀 ~ file: popupProfil.vue:68 ~ beforeCreate ~ this.store.user:",
+      this.store.user
+    );
+
+    this.store.fetchUserProfil(this.store.user.email);
   },
 };
 </script>

@@ -29,6 +29,7 @@ export default {
   components: {
     popupProfil,
   },
+
   data() {
     return {
       openProfil: false,
