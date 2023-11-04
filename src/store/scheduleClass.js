@@ -9,7 +9,10 @@ export const scheduleClass = defineStore("scheduleClass", {
   actions: {
     async fetchScheduleClass() {
       try {
-        const { data } = await axiosAuth.get(`/scheduleClass/getSchedule`);
+        const userId = localStorage.getItem("_id");
+        const { data } = await axiosAuth.get(
+          `/scheduleClass/getSchedule?_id=${userId}`
+        );
         this.scheduleClass = data.scheduleClass;
         for (const event of this.scheduleClass) {
           const subject = event.subject?.[0];
@@ -27,6 +30,7 @@ export const scheduleClass = defineStore("scheduleClass", {
 
     async postScheduleClass(scheduleClass) {
       try {
+        const userId = localStorage.getItem("_id");
         const body = {
           scheduleClassJoi: scheduleClass.map((item) => ({
             id: item.id,
@@ -37,7 +41,7 @@ export const scheduleClass = defineStore("scheduleClass", {
             subject_id: item.subject_id,
           })),
         };
-        await axiosAuth.post(`/scheduleClass/postSchedule`, body);
+        await axiosAuth.post(`/scheduleClass/postSchedule?_id=${userId}`, body);
         const idsToRemove = scheduleClass.map((item) => item.id);
         this.scheduleClass = this.scheduleClass.filter(
           (item) => !idsToRemove.includes(item.id)
@@ -50,8 +54,9 @@ export const scheduleClass = defineStore("scheduleClass", {
     },
     async deleteScheduleClass(start, end) {
       try {
+        const userId = localStorage.getItem("_id");
         await axiosAuth.delete(
-          `/scheduleClass/deleteSchedule?start=${start}&end=${end}`
+          `/scheduleClass/deleteSchedule?_id=${userId}&start=${start}&end=${end}`
         );
       } catch (error) {
         alert(error);
