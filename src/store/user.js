@@ -9,8 +9,9 @@ export const user = defineStore("user", {
   }),
   getters: {},
   actions: {
-    async fetchUserProfil(userId) {
+    async fetchUserProfil() {
       try {
+        const userId = localStorage.getItem("_id");
         const { data } = await axiosAuth.get(
           `/user/getCustomization?_id=${userId}`
         );
@@ -21,8 +22,9 @@ export const user = defineStore("user", {
       }
     },
 
-    async postUserProfil(userId, customElement) {
+    async postUserProfil(customElement) {
       try {
+        const userId = localStorage.getItem("_id");
         const body = {
           userJoi: {
             maxEventHoursPerDay: customElement.maxEventHoursPerDay,
@@ -31,10 +33,7 @@ export const user = defineStore("user", {
             startHour: customElement.startHour,
           },
         };
-        await axiosAuth.post(
-          `/user/postCustomization?_id=${userId}`,
-          body
-        );
+        await axiosAuth.post(`/user/postCustomization?_id=${userId}`, body);
       } catch (error) {
         alert(error);
         console.log(error);
@@ -60,6 +59,7 @@ export const user = defineStore("user", {
         localStorage.setItem("token", resp.data.accessToken);
         localStorage.setItem("refreshToken", resp.data.refreshToken);
         localStorage.setItem("_id", resp.data.id);
+        // axiosAuth.defaults.params = { _id: resp.data.id };
         axiosAuth.defaults.headers.common["Authorization"] =
           "Bearer " + resp.data.accessToken;
       } catch (error) {

@@ -400,7 +400,6 @@ export default {
 
 
   mounted: async function () {
-
     this.isLoading = true;
     await this.loadEvents();
     this.calendar.update({ events: this.combinedEvents });

@@ -1,6 +1,5 @@
 import { defineStore } from "pinia";
 import { axiosAuth } from "../hook/axios";
-
 export const scheduleJob = defineStore("scheduleJob", {
   state: () => ({
     scheduleJob: [],
@@ -9,7 +8,11 @@ export const scheduleJob = defineStore("scheduleJob", {
   actions: {
     async fetchScheduleJob() {
       try {
-        const { data } = await axiosAuth.get(`/scheduleJob/getSchedule`);
+        const userId = localStorage.getItem("_id");
+        const { data } = await axiosAuth.get(
+          `/scheduleJob/getSchedule?_id=${userId}`
+        );
+
         this.scheduleJob = data.scheduleJob;
       } catch (error) {
         alert(error);
@@ -19,6 +22,7 @@ export const scheduleJob = defineStore("scheduleJob", {
 
     async postScheduleJob(scheduleJob) {
       try {
+        const userId = localStorage.getItem("_id");
         const body = {
           scheduleJobJoi: {
             id: scheduleJob.id,
@@ -31,7 +35,7 @@ export const scheduleJob = defineStore("scheduleJob", {
             newBorderColor: scheduleJob.borderColor,
           },
         };
-        await axiosAuth.post(`/scheduleJob/postSchedule`, body);
+        await axiosAuth.post(`/scheduleJob/postSchedule?_id=${userId}`, body);
 
         this.scheduleJob.push(scheduleJob);
       } catch (error) {
