@@ -218,7 +218,6 @@ export default {
       await this.classStore.deleteScheduleClass(start, end);
 
       const maxEventHoursPerDay = this.userData.maxEventHoursPerDay;
-      console.log("🚀 ~ file: Calendar.vue:224 ~ addRandomScheduleClass ~ this.customData.maxEventHoursPerDay:", this.userData.maxEventHoursPerDay)
       const maxEventHoursPerSubject = 2; // Limite de 2 heures par événement
       const minEventHoursPerSubject = 1; // Minimum de 1 heure par événement
       const minEventHoursFor30MinWeekHours = 0.5; // Minimum de 30 minutes si weekHours est de 30 minutes
@@ -231,7 +230,11 @@ export default {
       const weekDays = getCurrentWeekDays(this.config.startDate);
       // On récupere les heures disponibles pour chaque matière
       await this.hoursStore.fetchHoursSubject();
-
+      const scheduleJobInCurrentWeek = this.store.scheduleJob.filter((jobEvent) => {
+        const jobEventStartDate = new Date(jobEvent.start);
+        const jobEventEndDate = new Date(jobEvent.end);
+        return jobEventStartDate >= startWeek && jobEventEndDate <= endWeek;
+      });
       // Pour chaque jour de la semaine
       for (const day of weekDays) {
         let remainingEventHours = maxEventHoursPerDay;
@@ -270,9 +273,10 @@ export default {
             startDate.setHours(lunchBreakEndHour, 0, 0, 0);
             endDate.setHours(endDate.getHours() + lunchBreakHours, endDate.getMinutes() - lunchBreakMinutes, 0, 0);
           }
+
           let isOverlap = false;
           const { formatedStartDate, formatedEndDate } = this.formatDate(startDate, endDate);
-          for (const jobEvent of this.store.scheduleJob) {
+          for (const jobEvent of scheduleJobInCurrentWeek) {
             if (this.isEventOverlap({ start: formatedStartDate, end: formatedEndDate }, jobEvent)) {
               isOverlap = true;
               break;
