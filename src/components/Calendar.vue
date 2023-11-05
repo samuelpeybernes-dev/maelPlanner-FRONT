@@ -16,7 +16,8 @@
     <v-btn class="m-0.5" color="#c026d3" icon="mdi-calendar-today" v-on:click="navigateToday"></v-btn>
     <v-btn class="m-0.5" color="#c026d3" icon="mdi-arrow-right" v-on:click="navigateNext"></v-btn>
     <popupMenu class="m-0.5" v-on:generated="addRandomScheduleClass"></popupMenu>
-    <v-btn class="m-0.5" color="#c026d3" icon="mdi-cross" v-on:click="getPreviousScheduleClass"></v-btn>
+    <v-btn v-show="showPrevious" class="m-0.5" color="#c026d3" icon="mdi-cross"
+      v-on:click="getPreviousScheduleClass"></v-btn>
   </div>
 </template>
 
@@ -83,6 +84,7 @@ export default {
         maxEventHoursPerDay: 8,
       },
       previousScheduleClass: [],
+      showPrevious: false,
       isPreviousScheduleClass: false,
       combinedEvents: [],
       scheduleModal: {
@@ -207,27 +209,40 @@ export default {
       }
     },
     async loadEvents() {
-      console.log("🚀 ~ file: Calendar.vue:216 ~ loadEvents ~ ...this.previousScheduleClass:", ...this.previousScheduleClass)
-
       await this.store.fetchScheduleJob();
       this.combinedEvents.push(...this.store.scheduleJob);
       if (!this.isPreviousScheduleClass) {
         await this.classStore.fetchScheduleClass();
         this.combinedEvents.push(...this.classStore.scheduleClass);
       } else {
-        console.log("🚀 ~ file: Calendar.vue:218 ~ loadEvents ~ this.previousScheduleClass:", this.previousScheduleClass)
         this.combinedEvents.push(...this.previousScheduleClass);
+
+        if (this.classStore.scheduleClass[0].id === this.previousScheduleClass[0].id) {
+          this.showPrevious = false;
+        }
+
+        this.previousScheduleClass = [];
+        this.previousScheduleClass.push(...this.classStore.scheduleClass)
+        this.isPreviousScheduleClass = false;
       }
     },
 
     async getPreviousScheduleClass() {
       this.isPreviousScheduleClass = true;
       this.combinedEvents = [];
+
       await this.loadEvents();
-      console.log(this.combinedEvents)
       this.calendar.update({ events: this.combinedEvents });
+
+      const startWeek = new Date(this.config.startDate);
+      const endWeek = new Date(this.config.startDate.addDays(6));
+      const { formatedStartDate: start, formatedEndDate: end } = this.formatDate(startWeek, endWeek);
+
+      await this.classStore.deleteScheduleClass(start, end);
+      await this.classStore.postScheduleClass(this.previousScheduleClass);
     },
     async addRandomScheduleClass() {
+      this.showPrevious = true;
       const startWeek = new Date(this.config.startDate);
       const endWeek = new Date(this.config.startDate.addDays(6));
       endWeek.setHours(23, 0, 0, 0);
@@ -325,9 +340,13 @@ export default {
         }
       }
       this.combinedEvents = [];
-      this.previousScheduleClass = [];
-      this.previousScheduleClass.push(...newEvents)
+      if (!this.previousScheduleClass.length > 0) {
+        this.previousScheduleClass = [];
+        this.previousScheduleClass.push(...newEvents)
+      }
+
       await this.classStore.postScheduleClass(newEvents);
+
       await this.loadEvents();
       this.calendar.update({ events: this.combinedEvents });
       this.isLoading = false;
