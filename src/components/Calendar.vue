@@ -16,6 +16,7 @@
     <v-btn class="m-0.5" color="#c026d3" icon="mdi-calendar-today" v-on:click="navigateToday"></v-btn>
     <v-btn class="m-0.5" color="#c026d3" icon="mdi-arrow-right" v-on:click="navigateNext"></v-btn>
     <popupMenu class="m-0.5" v-on:generated="addRandomScheduleClass"></popupMenu>
+    <v-btn class="m-0.5" color="#c026d3" icon="mdi-cross" v-on:click="getPreviousScheduleClass"></v-btn>
   </div>
 </template>
 
@@ -81,6 +82,8 @@ export default {
         lunchBreakEndHour: 13,
         maxEventHoursPerDay: 8,
       },
+      previousScheduleClass: [],
+      isPreviousScheduleClass: false,
       combinedEvents: [],
       scheduleModal: {
         title: "",
@@ -204,11 +207,25 @@ export default {
       }
     },
     async loadEvents() {
+      console.log("🚀 ~ file: Calendar.vue:216 ~ loadEvents ~ ...this.previousScheduleClass:", ...this.previousScheduleClass)
+
       await this.store.fetchScheduleJob();
       this.combinedEvents.push(...this.store.scheduleJob);
+      if (!this.isPreviousScheduleClass) {
+        await this.classStore.fetchScheduleClass();
+        this.combinedEvents.push(...this.classStore.scheduleClass);
+      } else {
+        console.log("🚀 ~ file: Calendar.vue:218 ~ loadEvents ~ this.previousScheduleClass:", this.previousScheduleClass)
+        this.combinedEvents.push(...this.previousScheduleClass);
+      }
+    },
 
-      await this.classStore.fetchScheduleClass();
-      this.combinedEvents.push(...this.classStore.scheduleClass);
+    async getPreviousScheduleClass() {
+      this.isPreviousScheduleClass = true;
+      this.combinedEvents = [];
+      await this.loadEvents();
+      console.log(this.combinedEvents)
+      this.calendar.update({ events: this.combinedEvents });
     },
     async addRandomScheduleClass() {
       const startWeek = new Date(this.config.startDate);
@@ -308,7 +325,8 @@ export default {
         }
       }
       this.combinedEvents = [];
-
+      this.previousScheduleClass = [];
+      this.previousScheduleClass.push(...newEvents)
       await this.classStore.postScheduleClass(newEvents);
       await this.loadEvents();
       this.calendar.update({ events: this.combinedEvents });

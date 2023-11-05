@@ -36,8 +36,12 @@ export const scheduleJob = defineStore("scheduleJob", {
           },
         };
         await axiosAuth.post(`/scheduleJob/postSchedule?_id=${userId}`, body);
-
-        this.scheduleJob.push(scheduleJob);
+        const isDuplicate = this.scheduleJob.some(
+          (item) => item.id === scheduleJob.id
+        );
+        if (!isDuplicate) {
+          this.scheduleJob.push(scheduleJob);
+        }
       } catch (error) {
         alert(error);
         console.log(error);
