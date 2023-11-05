@@ -6,10 +6,21 @@
       Mael Planner</h2>
     <v-form ref="form">
       <v-card class="mx-auto pa-12 pb-8" elevation="8" max-width="448" rounded="lg">
+        <div class="text-subtitle-1 text-medium-emphasis">Prénom</div>
+
+        <v-text-field density="compact" placeholder="Prénom" prepend-inner-icon="mdi-email-outline" variant="outlined"
+          v-model="userData.firstName" :rules="firstNameRules"></v-text-field>
+
+        <div class="text-subtitle-1 text-medium-emphasis">Nom</div>
+
+        <v-text-field density="compact" placeholder="Nom" prepend-inner-icon="mdi-email-outline" variant="outlined"
+          v-model="userData.name" :rules="nameRules"></v-text-field>
+
+
         <div class="text-subtitle-1 text-medium-emphasis">Email</div>
 
-        <v-text-field density="compact" placeholder="Adresse email" prepend-inner-icon="mdi-email-outline"
-          variant="outlined" v-model="userData.email" :rules="emailRules"></v-text-field>
+        <v-text-field required density="compact" placeholder="Adresse email" prepend-inner-icon="mdi-email-outline"
+          variant="outlined" :rules="emailRules" v-model="userData.email"></v-text-field>
 
         <div class="text-subtitle-1 text-medium-emphasis d-flex align-center justify-space-between">
           Mot de passe
@@ -21,12 +32,12 @@
           @click:append-inner="visible = !visible"></v-text-field>
 
         <v-btn @click="validate" block class="mb-8" color="blue" size="large" variant="tonal">
-          Se connecter
+          S'inscrire
         </v-btn>
-        <v-alert v-model="alert" color="error" icon="$error" title="Essaie de te rappeler 🙄"
-          text="Mauvais email ou mot de passe"></v-alert>
-        <v-card-text class="text-center">
-          <router-link class="text-blue text-decoration-none" to="/register">S'inscrire<v-icon
+        <v-alert v-model="alert" color="error" icon="$error" title="On se connait non ? 🤔"
+          text="Un compte avec cette adresse mail existe deja"></v-alert>
+        <v-card-text v-show="alert" class="text-center">
+          <router-link class="text-blue text-decoration-none" to="/login">Se connecter<v-icon
               icon="mdi-chevron-right"></v-icon></router-link>
         </v-card-text>
       </v-card>
@@ -45,6 +56,8 @@ export default {
   data() {
     const userData = {
       email: '',
+      firstName: '',
+      name: '',
       password: '',
     }
 
@@ -64,6 +77,20 @@ export default {
           return "L'email n'est pas valide."
         },
       ],
+      firstNameRules: [
+        value => {
+          if (value) return true
+
+          return 'Le prénom est requis.'
+        },
+      ],
+      nameRules: [
+        value => {
+          if (value) return true
+
+          return 'Le nom est requis.'
+        },
+      ],
       pswRules: [
         value => {
           if (value) return true
@@ -77,15 +104,16 @@ export default {
     async validate() {
       const { valid } = await this.$refs.form.validate()
       if (valid) {
-        await this.user.postLogin(this.userData)
-        this.goToCalendar()
+        const res = await this.user.postRegister(this.userData)
+        if (res?.code === "ERR_BAD_REQUEST") this.alert = true
+        else this.goToCalendar()
       }
     },
     goToCalendar() {
       if (this.user.user.auth) {
         this.$router.push({ name: "Calendar" })
       } else {
-        this.alert = true
+        this.$router.push('/login')
       }
     },
   },

@@ -36,11 +36,17 @@
                 <v-list lines="two" subheader>
                     <v-list-subheader>General</v-list-subheader>
                     <v-list-item title="Nom">{{
+                        this.store.user.firstName
+                    }}</v-list-item>
+                    <v-list-item title="Nom">{{
                         this.store.user.name
                     }}</v-list-item>
                     <v-list-item title="Email">{{
                         this.store.user.email
                     }}</v-list-item>
+                    <v-btn class="ml-3" color="red" v-on:click="logout">
+                        Déconnexion
+                    </v-btn>
                 </v-list>
             </v-card>
         </v-dialog>
@@ -85,7 +91,13 @@ export default {
         },
         async updateProfil() {
             await this.store.postUserProfil()
-        }
+        },
+        async logout() {
+            localStorage.removeItem("token");
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("_id");
+            this.$router.push('/login')
+        },
     },
     async beforeCreate() {
         await this.store.fetchUserProfil();

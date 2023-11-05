@@ -59,34 +59,35 @@ export const user = defineStore("user", {
         localStorage.setItem("token", resp.data.accessToken);
         localStorage.setItem("refreshToken", resp.data.refreshToken);
         localStorage.setItem("_id", resp.data.id);
-        // axiosAuth.defaults.params = { _id: resp.data.id };
         axiosAuth.defaults.headers.common["Authorization"] =
           "Bearer " + resp.data.accessToken;
       } catch (error) {
-        alert(error);
-        console.log(error);
+        return error;
       }
     },
     async postRegister(user) {
       try {
         const body = {
+          firstName: user.firstName,
           name: user.name,
           email: user.email,
           password: user.password,
-          token: user.token,
         };
         const resp = await axiosNoAuth.post(`/guest/register`, body);
         this.user = {
           auth: true,
-          access_token: resp.data.access_token,
-          refresh_token: resp.data.refresh_token,
+          access_token: resp.data.accessToken,
+          refresh_token: resp.data.refreshToken,
           name: user.name,
           email: user.email,
         };
-        localStorage.setItem("token", resp.data.access_token);
+        localStorage.setItem("token", resp.data.accessToken);
+        localStorage.setItem("refreshToken", resp.data.refreshToken);
+        localStorage.setItem("_id", resp.data.id);
+        axiosAuth.defaults.headers.common["Authorization"] =
+          "Bearer " + resp.data.accessToken;
       } catch (error) {
-        alert(error);
-        console.log(error);
+        return error;
       }
     },
   },

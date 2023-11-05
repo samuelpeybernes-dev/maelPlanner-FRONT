@@ -1,5 +1,6 @@
 import Calendar from "./components/Calendar.vue";
 import Login from "./components/login.vue";
+import Register from "./components/register.vue";
 import * as VueRouter from "vue-router";
 import { user } from "./store/user.js";
 const routes = [
@@ -10,7 +11,7 @@ const routes = [
     meta: { requiredAuth: true },
   },
   { path: "/login", name: "Login", component: Login },
-  { path: "/register", name: "Register", component: Login },
+  { path: "/register", name: "Register", component: Register },
 ];
 
 const router = VueRouter.createRouter({
