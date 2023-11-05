@@ -90,7 +90,7 @@ export default {
             }
         },
         async updateProfil() {
-            await this.store.postUserProfil()
+            await this.store.postUserProfil(this.customElement)
         },
         async logout() {
             localStorage.removeItem("token");
