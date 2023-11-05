@@ -35,7 +35,7 @@
                 <v-divider></v-divider>
                 <v-list lines="two" subheader>
                     <v-list-subheader>General</v-list-subheader>
-                    <v-list-item title="Nom">{{
+                    <v-list-item title="Prénom">{{
                         this.store.user.firstName
                     }}</v-list-item>
                     <v-list-item title="Nom">{{
