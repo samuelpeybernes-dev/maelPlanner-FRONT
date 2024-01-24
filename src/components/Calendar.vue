@@ -15,9 +15,8 @@
     <v-btn class="m-0.5" color="#c026d3" icon="mdi-arrow-left" v-on:click="navigatePrevious"></v-btn>
     <v-btn class="m-0.5" color="#c026d3" icon="mdi-calendar-today" v-on:click="navigateToday"></v-btn>
     <v-btn class="m-0.5" color="#c026d3" icon="mdi-arrow-right" v-on:click="navigateNext"></v-btn>
-    <popupMenu class="m-0.5" v-on:generated="addRandomScheduleClass"></popupMenu>
-    <v-btn v-show="showPrevious" class="m-0.5" color="#c026d3" icon="mdi-cross"
-      v-on:click="getPreviousScheduleClass"></v-btn>
+    <popupMenu class="m-0.5" v-on:generated="addRandomScheduleClass"
+      v-on:getPreviousScheduleClass="getPreviousScheduleClass" :showPrevious="showPrevious"></popupMenu>
   </div>
 </template>
 
@@ -101,14 +100,20 @@ export default {
       this.userData = customElement;
     },
     navigatePrevious() {
+      this.previousScheduleClass = []
+      this.showPrevious = false;
       this.config.startDate = this.config.startDate.addDays(-7);
     },
 
     navigateNext() {
+      this.previousScheduleClass = []
+      this.showPrevious = false;
       this.config.startDate = this.config.startDate.addDays(7);
     },
 
     navigateToday() {
+      this.previousScheduleClass = []
+      this.showPrevious = false;
       this.config.startDate = DayPilot.Date.today();
     },
     cancelJob(scheduleModal) {
@@ -216,6 +221,9 @@ export default {
         this.combinedEvents.push(...this.classStore.scheduleClass);
       } else {
         this.combinedEvents.push(...this.previousScheduleClass);
+        console.log("🚀 TOTAL GENERE", this.classStore.scheduleClass)
+        console.log("🚀 GENERE", this.classStore.scheduleClass[0].id)
+        console.log("🚀 PREVIOUS", this.previousScheduleClass[0].id)
 
         if (this.classStore.scheduleClass[0].id === this.previousScheduleClass[0].id) {
           this.showPrevious = false;
@@ -232,6 +240,7 @@ export default {
       this.combinedEvents = [];
 
       await this.loadEvents();
+      this.isPreviousScheduleClass = false;
       this.calendar.update({ events: this.combinedEvents });
 
       const startWeek = new Date(this.config.startDate);

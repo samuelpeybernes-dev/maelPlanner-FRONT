@@ -8,6 +8,9 @@
         <v-list-item class="px-0">
           <v-btn height="50px" width="100%" v-on:click="generate">Generer les cours</v-btn>
         </v-list-item>
+        <v-list-item class="px-0" v-show="showPrevious">
+          <v-btn height="50px" width="100%" v-on:click="getPreviousScheduleClass">Précédent</v-btn>
+        </v-list-item>
       </v-list>
     </v-menu>
   </div>
@@ -15,11 +18,19 @@
 
 <script>
 export default {
-
+  props: {
+    showPrevious: {
+      type: Boolean,
+      default: false,
+    },
+  },
 
   methods: {
     async generate() {
       this.$emit("generated");
+    },
+    async getPreviousScheduleClass() {
+      this.$emit("getPreviousScheduleClass");
     },
   },
 };
