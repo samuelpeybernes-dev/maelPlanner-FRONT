@@ -6,6 +6,7 @@
             <template v-slot:activator="{ props }">
                 <v-btn color="#c026d3" icon="mdi-account" v-bind="props"></v-btn>
             </template>
+
             <v-card>
                 <v-toolbar dark color="#c026d3">
                     <v-btn icon dark v-on:click="cancel">
@@ -17,44 +18,68 @@
                         <v-btn variant="text" v-on:click="validate"> Enregistrer </v-btn>
                     </v-toolbar-items>
                 </v-toolbar>
-                <v-list lines="two" subheader>
-                    <v-list-subheader>Réglages </v-list-subheader>
-                    <v-list-item title="Heure de début de la journée"> <v-text-field v-model="customElement.startHour"
-                            type="number" style="width: 80px" density="compact" hide-details
-                            variant="outlined"></v-text-field></v-list-item>
-                    <v-list-item title="Nombres d'heures maximum par jour"> <v-text-field
-                            v-model="customElement.maxEventHoursPerDay" type="number" style="width: 80px" density="compact"
-                            hide-details variant="outlined"></v-text-field></v-list-item>
-                    <v-list-item title="Heure de début de la pause"> <v-text-field
-                            v-model="customElement.lunchBreakStartHour" type="number" style="width: 80px" density="compact"
-                            hide-details variant="outlined"></v-text-field></v-list-item>
-                    <v-list-item title="Heure de fin de la pause"> <v-text-field v-model="customElement.lunchBreakEndHour"
-                            type="number" style="width: 80px" density="compact" hide-details
-                            variant="outlined"></v-text-field></v-list-item>
-                </v-list>
-                <v-divider></v-divider>
-                <v-list lines="two" subheader>
-                    <v-list-subheader>General</v-list-subheader>
-                    <v-list-item title="Prénom">{{
-                        this.store.user.firstName
-                    }}</v-list-item>
-                    <v-list-item title="Nom">{{
-                        this.store.user.name
-                    }}</v-list-item>
-                    <v-list-item title="Email">{{
-                        this.store.user.email
-                    }}</v-list-item>
-                    <v-btn class="ml-3" color="red" v-on:click="logout">
-                        Déconnexion
-                    </v-btn>
-                </v-list>
+                <v-tabs v-model="tab" bg-color="#c026d3">
+                    <v-tab value="one">Compte</v-tab>
+                    <v-tab value="two">Matières</v-tab>
+                    <v-tab value="three">Réglages</v-tab>
+                </v-tabs>
+
+                <v-window v-model="tab">
+
+                    <v-window-item value="one">
+                        <v-list lines="one" subheader>
+                            <v-list-subheader>Compte</v-list-subheader>
+                            <v-list-item title="Prénom">{{
+                                this.store.user.firstName
+                            }}</v-list-item>
+                            <v-list-item title="Nom">{{
+                                this.store.user.name
+                            }}</v-list-item>
+                            <v-list-item title="Email">{{
+                                this.store.user.email
+                            }}</v-list-item>
+                            <v-btn class="ml-3" color="red" v-on:click="logout">
+                                Déconnexion
+                            </v-btn>
+                        </v-list>
+                    </v-window-item>
+
+                    <v-window-item value="two">
+                        <v-list lines="two" subheader>
+                            <classSelector></classSelector>
+                        </v-list>
+                    </v-window-item>
+
+                    <v-window-item value="three">
+                        <v-list lines="three" subheader>
+                            <v-list-subheader>Réglages </v-list-subheader>
+                            <v-list-item title="Heure de début de la journée"> <v-text-field
+                                    v-model="customElement.startHour" type="number" style="width: 80px" density="compact"
+                                    hide-details variant="outlined"></v-text-field></v-list-item>
+                            <v-list-item title="Nombres d'heures maximum par jour"> <v-text-field
+                                    v-model="customElement.maxEventHoursPerDay" type="number" style="width: 80px"
+                                    density="compact" hide-details variant="outlined"></v-text-field></v-list-item>
+                            <v-list-item title="Heure de début de la pause"> <v-text-field
+                                    v-model="customElement.lunchBreakStartHour" type="number" style="width: 80px"
+                                    density="compact" hide-details variant="outlined"></v-text-field></v-list-item>
+                            <v-list-item title="Heure de fin de la pause"> <v-text-field
+                                    v-model="customElement.lunchBreakEndHour" type="number" style="width: 80px"
+                                    density="compact" hide-details variant="outlined"></v-text-field></v-list-item>
+                        </v-list>
+                    </v-window-item>
+
+                </v-window>
             </v-card>
         </v-dialog>
     </div>
 </template>
 <script>
 import { user } from "../store/user";
+import classSelector from "./classSelector.vue";
 export default {
+    components: {
+        classSelector,
+    },
     setup() {
         return {
             store: user(),
@@ -73,6 +98,7 @@ export default {
         return {
             dialogLocal: false,
             customElement,
+            tab: null,
         };
     },
 
