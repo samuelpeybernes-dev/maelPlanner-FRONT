@@ -39,12 +39,16 @@
                         <v-btn icon dark @click="deleteSubject(subject._id)">
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
+
                         <v-spacer></v-spacer>
-                        <v-btn icon dark @click="dialog = false">
+                        <v-btn v-if="editingSubjectId !== subject._id" icon dark @click="startEditing(subject._id)">
                             <v-icon>mdi-pencil</v-icon>
                         </v-btn>
+                        <v-btn v-else icon dark @click="updateSubject">
+                            <v-icon>mdi-check</v-icon>
+                        </v-btn>
                     </v-toolbar>
-                    <v-card-item>
+                    <v-card-item v-if="editingSubjectId !== subject._id">
                         <div>
                             <div class="text-overline mb-1">
                                 {{ subject.text }}
@@ -54,7 +58,34 @@
                             </div>
                         </div>
                     </v-card-item>
+                    <v-card-item v-else>
+                        <div>
+                            <div class="text-overline mb-1">
+                                <input type="text" v-model="subject.text">
+                                
+                            </div>
+                            <div class="text-h6 mb-1">
+                                <input type="number" v-model="subject.weekHours">
+                                <v-color-picker v-model="subject.backColor" hide-canvas hide-inputs></v-color-picker>
+                                <v-container>
+                                    <v-menu v-model="menuColor" :close-on-content-click="false" :nudge-right="40"
+                                        transition="scale-transition" offset-y min-width="290px">
+                                        <template v-slot:activator="{ on, attrs }">
+                                         
+                                                <v-btn v-model="color" label="Color Picker" prepend-icon="mdi-palette"
+                                                 v-bind="attrs" v-on:click="on" :color="color">
+                                                    Ajouter
+                                                </v-btn>
+                                        </template>
+                                        <v-color-picker v-model="color" class="ma-2" hide-inputs>
 
+                                        </v-color-picker>
+                                    </v-menu>
+
+                                </v-container>
+                            </div>
+                        </div>
+                    </v-card-item>
                 </v-card>
             </div>
 
@@ -74,6 +105,9 @@ export default {
     data() {
         return {
             subjects: {},
+            editingSubjectId: null,
+            menuColor: false,
+      color: '',
         }
     },
 
@@ -89,6 +123,15 @@ export default {
 
         async deleteSubject(subjectId) {
             await this.store.deleteHoursSubject(subjectId);
+        },
+
+        startEditing(subjectId) {
+            this.editingSubjectId = subjectId;
+        },
+        async updateSubject() {
+            this.editingSubjectId = null;
+            await this.store.postHoursSubject(this.subjects);
+
         }
     }
 }
