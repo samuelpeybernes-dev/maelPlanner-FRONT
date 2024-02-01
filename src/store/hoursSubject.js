@@ -39,7 +39,10 @@ export const hoursSubject = defineStore("hoursSubject", {
           `/hoursSubject/postHoursSubject?_id=${userId}`,
           body
         );
-        this.hoursSubject.push(...response.data.data);
+        const isDuplicate = this.subject.some((item) => item.id === subject.id);
+        if (!isDuplicate) {
+          this.scheduleJob.push(...response.data.data);
+        }
       } catch (error) {
         alert(error);
         console.log(error);

@@ -35,7 +35,7 @@
             <div class="d-flex flex-wrap gap-2.5">
                 <v-card class="w-25 h-25 flex-grow-1 " v-for="subject in this.store.hoursSubject" :key="subject._id"
                     :color="subject.backColor">
-                    <v-toolbar :color="subject.backColor" height="40">
+                    <v-toolbar color="transparent" height="40">
                         <v-btn icon dark @click="deleteSubject(subject._id)">
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
@@ -44,7 +44,7 @@
                         <v-btn v-if="editingSubjectId !== subject._id" icon dark @click="startEditing(subject._id)">
                             <v-icon>mdi-pencil</v-icon>
                         </v-btn>
-                        <v-btn v-else icon dark @click="updateSubject">
+                        <v-btn v-else icon dark @click="updateSubject(subject)">
                             <v-icon>mdi-check</v-icon>
                         </v-btn>
                     </v-toolbar>
@@ -62,27 +62,25 @@
                         <div>
                             <div class="text-overline mb-1">
                                 <input type="text" v-model="subject.text">
-                                
                             </div>
-                            <div class="text-h6 mb-1">
-                                <input type="number" v-model="subject.weekHours">
-                                <v-color-picker v-model="subject.backColor" hide-canvas hide-inputs></v-color-picker>
-                                <v-container>
-                                    <v-menu v-model="menuColor" :close-on-content-click="false" :nudge-right="40"
-                                        transition="scale-transition" offset-y min-width="290px">
-                                        <template v-slot:activator="{ on, attrs }">
-                                         
-                                                <v-btn v-model="color" label="Color Picker" prepend-icon="mdi-palette"
-                                                 v-bind="attrs" v-on:click="on" :color="color">
-                                                    Ajouter
-                                                </v-btn>
-                                        </template>
-                                        <v-color-picker v-model="color" class="ma-2" hide-inputs>
 
-                                        </v-color-picker>
-                                    </v-menu>
+                            <div class="text-h6 mb-1 flex items-center">
+                                <input type="number" class="w-50" v-model="subject.weekHours">
+                                <v-menu class="w-50" style="z-index: 300000000000000;" v-model="menu" top nudge-bottom="105"
+                                    nudge-left="16" :close-on-content-click="false">
+                                    <template v-slot:activator="{ props }">
+                                        <v-card class="p-1">
+                                            <div :style="swatchStyle(subject.backColor)"
+                                                :class="`bg-[${subject.backColor}]`" v-bind="props" />
+                                        </v-card>
 
-                                </v-container>
+                                    </template>
+                                    <v-card>
+                                        <v-card-text class="pa-0">
+                                            <v-color-picker v-model="subject.backColor" flat />
+                                        </v-card-text>
+                                    </v-card>
+                                </v-menu>
                             </div>
                         </div>
                     </v-card-item>
@@ -106,8 +104,7 @@ export default {
         return {
             subjects: {},
             editingSubjectId: null,
-            menuColor: false,
-      color: '',
+            menu: false,
         }
     },
 
@@ -128,11 +125,27 @@ export default {
         startEditing(subjectId) {
             this.editingSubjectId = subjectId;
         },
-        async updateSubject() {
+        async updateSubject(subject) {
             this.editingSubjectId = null;
-            await this.store.postHoursSubject(this.subjects);
+            await this.store.postHoursSubject(subject);
+        },
 
-        }
+    },
+    computed: {
+        swatchStyle() {
+            const { menu } = this
+            return function (backColor) {
+                return {
+                    backgroundColor: backColor,
+                    cursor: 'pointer',
+                    height: '30px',
+                    width: '30px',
+                    borderRadius: menu ? '50%' : '4px',
+                    border: '1px solid rgba(0, 0, 0, 0.12)',
+                    transition: 'border-radius 200ms ease-in-out'
+                }
+            }
+        },
     }
 }
 </script>
