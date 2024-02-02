@@ -17,6 +17,12 @@
     <v-btn class="m-0.5" color="#c026d3" icon="mdi-arrow-right" v-on:click="navigateNext"></v-btn>
     <popupMenu class="m-0.5" v-on:generated="addRandomScheduleClass"
       v-on:getPreviousScheduleClass="getPreviousScheduleClass" :showPrevious="showPrevious"></popupMenu>
+    <v-dialog width="500" v-model="isBirthday">
+      <v-card>
+        <v-card-title class="mx-auto ">Joyeux anniversaire (en retard) bébé 💖</v-card-title>
+      </v-card>
+    </v-dialog>
+
   </div>
 </template>
 
@@ -32,6 +38,7 @@ import { scheduleJob } from '../store/scheduleJob';
 import { scheduleClass } from '../store/scheduleClass';
 import { hoursSubject } from '../store/hoursSubject';
 import { user } from "../store/user";
+import birthdayAudio from "../assets/22-taylor-swift.mp3"
 export default {
   components: {
     DayPilotCalendar,
@@ -56,6 +63,7 @@ export default {
   name: 'Calendar',
   data() {
     return {
+      isBirthday: true,
       isLoading: false,
       config: {
         locale: 'fr-fr',
@@ -96,6 +104,18 @@ export default {
     };
   },
   methods: {
+    startBirthday() {
+      // start mp3 sound 
+      const audio = new Audio(birthdayAudio);
+      audio.play();
+      this.$confetti.start();
+      this.isBirthday = true;
+      setTimeout(() => {
+        this.$confetti.stop();
+        this.isBirthday = false;
+        audio.pause();
+      }, 30000);
+    },
     validateProfil(customElement) {
       this.userData = customElement;
     },
@@ -446,6 +466,7 @@ export default {
 
 
   mounted: async function () {
+    this.startBirthday();
     this.isLoading = true;
     await this.loadEvents();
     this.calendar.update({ events: this.combinedEvents });
