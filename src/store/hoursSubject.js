@@ -21,8 +21,6 @@ export const hoursSubject = defineStore("hoursSubject", {
     },
     async postHoursSubject(subject) {
       try {
-        console.log("🚀 ~ postHoursSubject ~ hoursSubjects:", subject);
-
         const userId = localStorage.getItem("_id");
         const body = {
           hoursSubjectJoi: [
@@ -39,9 +37,13 @@ export const hoursSubject = defineStore("hoursSubject", {
           `/hoursSubject/postHoursSubject?_id=${userId}`,
           body
         );
-        const isDuplicate = this.subject.some((item) => item.id === subject.id);
+
+        const isDuplicate = this.hoursSubject.some(
+          (item) => item._id === subject._id
+        );
+
         if (!isDuplicate) {
-          this.scheduleJob.push(...response.data.data);
+          this.hoursSubject.push(...response.data.data);
         }
       } catch (error) {
         alert(error);

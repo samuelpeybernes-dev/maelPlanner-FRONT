@@ -8,14 +8,18 @@
                         <span class="text-h6">Titre de la matière :</span>
                     </v-card-title>
                     <v-container>
-                        <v-text-field v-model="subjects.text" label="Titre" required></v-text-field>
+                        <v-text-field hide-details v-model="subjects.text" label="Titre" required></v-text-field>
                     </v-container>
                     <v-card-title>
                         <span class="text-h6">Nombres d'heure par semaine :</span>
                     </v-card-title>
-                    <v-text-field v-model="subjects.weekHours" type="number" style="width: 80px" density="compact"
-                        hide-details variant="outlined">
-                    </v-text-field>
+                    <v-container>
+
+                        <v-text-field v-model="subjects.weekHours" type="number" style="width: 80px" density="compact"
+                            hide-details>
+                        </v-text-field>
+                    </v-container>
+
                     <v-card-title>
                         <span class="text-h6">Couleur :</span>
                     </v-card-title>
@@ -32,7 +36,7 @@
                     </v-btn>
                 </v-card-actions>
             </v-card>
-            <div class="d-flex flex-wrap gap-2.5">
+            <div class="d-flex flex-wrap gap-2.5 custom-input">
                 <v-card class="w-25 h-25 flex-grow-1 " v-for="subject in this.store.hoursSubject" :key="subject._id"
                     :color="subject.backColor">
                     <v-toolbar color="transparent" height="40">
@@ -61,26 +65,30 @@
                     <v-card-item v-else>
                         <div>
                             <div class="text-overline mb-1">
-                                <input type="text" v-model="subject.text">
+                                <v-text-field hide-details density="compact" v-model="subject.text"
+                                    variant="underlined"></v-text-field>
                             </div>
 
-                            <div class="text-h6 mb-1 flex items-center">
-                                <input type="number" class="w-50" v-model="subject.weekHours">
-                                <v-menu class="w-50" style="z-index: 300000000000000;" v-model="menu" top nudge-bottom="105"
-                                    nudge-left="16" :close-on-content-click="false">
-                                    <template v-slot:activator="{ props }">
-                                        <v-card class="p-1">
-                                            <div :style="swatchStyle(subject.backColor)"
-                                                :class="`bg-[${subject.backColor}]`" v-bind="props" />
-                                        </v-card>
+                            <div class="text-h6 mb-1 flex items-center mt-2">
+                                <v-text-field density="compact" hide-details type="number" class="w-80"
+                                    v-model="subject.weekHours" variant="underlined"></v-text-field>
+                                <div class="w-20">
+                                    <v-menu style="z-index: 300000000000000;" v-model="menu" top nudge-bottom="105"
+                                        nudge-left="16" :close-on-content-click="false">
+                                        <template v-slot:activator="{ props }">
+                                            <v-card class="p-1 w-fit ml-4">
+                                                <div :style="swatchStyle(subject.backColor)"
+                                                    :class="`bg-[${subject.backColor}]`" v-bind="props" />
+                                            </v-card>
 
-                                    </template>
-                                    <v-card>
-                                        <v-card-text class="pa-0">
-                                            <v-color-picker v-model="subject.backColor" flat />
-                                        </v-card-text>
-                                    </v-card>
-                                </v-menu>
+                                        </template>
+                                        <v-card>
+                                            <v-card-text class="pa-0">
+                                                <v-color-picker v-model="subject.backColor" flat />
+                                            </v-card-text>
+                                        </v-card>
+                                    </v-menu>
+                                </div>
                             </div>
                         </div>
                     </v-card-item>
@@ -127,7 +135,8 @@ export default {
         },
         async updateSubject(subject) {
             this.editingSubjectId = null;
-            await this.store.postHoursSubject(subject);
+            const { _id, backColor, text, weekHours } = subject
+            await this.store.postHoursSubject({ _id, backColor, text, weekHours });
         },
 
     },
@@ -151,3 +160,8 @@ export default {
 </script>
 
 
+<style >
+.custom-input .v-text-field input.v-field__input {
+    padding: 0;
+}
+</style>
