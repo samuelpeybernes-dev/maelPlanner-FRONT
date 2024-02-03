@@ -19,7 +19,7 @@
       v-on:getPreviousScheduleClass="getPreviousScheduleClass" :showPrevious="showPrevious"></popupMenu>
     <v-dialog width="500" v-model="isBirthday">
       <v-card>
-        <v-card-title class="mx-auto ">Joyeux anniversaire (en retard) bébé 💖</v-card-title>
+        <v-card-title class="mx-auto ">Joyeux anniversaire {{ this.userStore.user.firstName }} !</v-card-title>
       </v-card>
     </v-dialog>
 
@@ -63,7 +63,7 @@ export default {
   name: 'Calendar',
   data() {
     return {
-      isBirthday: true,
+      isBirthday: false,
       isLoading: false,
       config: {
         locale: 'fr-fr',
@@ -101,20 +101,42 @@ export default {
         validated: false,
       },
       selectedTimeRangeArgs: null,
+      birthdayAudio: new Audio(birthdayAudio),
     };
+  },
+  watch: {
+    isBirthday(newVal) {
+      if (!newVal) {
+        this.$confetti.stop();
+        this.birthdayAudio.pause();
+      }
+    },
   },
   methods: {
     startBirthday() {
-      // start mp3 sound 
-      const audio = new Audio(birthdayAudio);
-      audio.play();
+      this.birthdayAudio.play();
       this.$confetti.start();
       this.isBirthday = true;
       setTimeout(() => {
         this.$confetti.stop();
         this.isBirthday = false;
-        audio.pause();
+        this.birthdayAudio.pause();
       }, 30000);
+    },
+    isBirthdayToday() {
+      const today = new Date()
+      const day = today.getDate();
+      const month = today.getMonth() + 1;
+
+      const userBirthday = this.userStore.user.birthday;
+      const birthdayDate = new Date(userBirthday);
+      const userDay = birthdayDate.getDate();
+      const userMonth = birthdayDate.getMonth() + 1;
+
+      userMonth === month && userDay === day;
+      if (userMonth === month && userDay === day) {
+        this.startBirthday();
+      }
     },
     validateProfil(customElement) {
       this.userData = customElement;
@@ -466,7 +488,8 @@ export default {
 
 
   mounted: async function () {
-    this.startBirthday();
+    await this.userStore.fetchUserProfil()
+    this.isBirthdayToday()
     this.isLoading = true;
     await this.loadEvents();
     this.calendar.update({ events: this.combinedEvents });
