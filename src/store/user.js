@@ -90,7 +90,17 @@ export const user = defineStore("user", {
         return error;
       }
     },
-
+    async resetPasswordRequest(email) {
+      try {
+        const body = {
+          email: email,
+        };
+        await axiosAuth.post(`/user/resetPasswordRequest`, body);
+      } catch (error) {
+        alert(error);
+        console.log(error);
+      }
+    },
     async resetPassword(userData) {
       try {
         const body = {

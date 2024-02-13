@@ -60,7 +60,7 @@ export default {
             if (valid) {
                 const res = await this.user.resetPassword(this.userData)
                 if (res?.code === "ERR_BAD_REQUEST") this.alert = true
-                else this.goToCalendar()
+                else this.$router.push({ name: "Login" })
             }
         },
 
