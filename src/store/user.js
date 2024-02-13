@@ -90,5 +90,19 @@ export const user = defineStore("user", {
         return error;
       }
     },
+
+    async resetPassword(userData) {
+      try {
+        const body = {
+          userId: userData.userId,
+          token: userData.token,
+          password: userData.password,
+        };
+        await axiosAuth.post(`/user/resetPassword`, body);
+      } catch (error) {
+        alert(error);
+        console.log(error);
+      }
+    },
   },
 });
