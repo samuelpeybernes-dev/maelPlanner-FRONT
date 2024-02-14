@@ -19,7 +19,9 @@
           :append-inner-icon="visible ? 'mdi-eye-off' : 'mdi-eye'" :type="visible ? 'text' : 'password'" density="compact"
           placeholder="Entre ton mot de passe" prepend-inner-icon="mdi-lock-outline" variant="outlined"
           @click:append-inner="visible = !visible"></v-text-field>
-
+        <v-card-text class="p-0 pb-1">
+          <router-link class="text-grey text-decoration-none" to="/forgotPassword">Mot de passe oublié ?</router-link>
+        </v-card-text>
         <v-btn @click="validate" block class="mb-8" color="blue" size="large" variant="tonal">
           Se connecter
         </v-btn>

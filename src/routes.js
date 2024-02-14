@@ -2,6 +2,7 @@ import Calendar from "./components/Calendar.vue";
 import Login from "./components/login.vue";
 import Register from "./components/register.vue";
 import PasswordReset from "./components/passwordReset.vue";
+import ForgotPassword from "./components/ForgotPassword.vue";
 import * as VueRouter from "vue-router";
 import { user } from "./store/user.js";
 const routes = [
@@ -14,6 +15,11 @@ const routes = [
   { path: "/login", name: "Login", component: Login },
   { path: "/register", name: "Register", component: Register },
   { path: "/passwordReset", name: "PasswordReset", component: PasswordReset },
+  {
+    path: "/forgotPassword",
+    name: "ForgotPassword",
+    component: ForgotPassword,
+  },
 ];
 
 const router = VueRouter.createRouter({

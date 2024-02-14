@@ -95,7 +95,7 @@ export const user = defineStore("user", {
         const body = {
           email: email,
         };
-        await axiosAuth.post(`/user/resetPasswordRequest`, body);
+        await axiosNoAuth.post(`/guest/resetPasswordRequest`, body);
       } catch (error) {
         alert(error);
         console.log(error);
