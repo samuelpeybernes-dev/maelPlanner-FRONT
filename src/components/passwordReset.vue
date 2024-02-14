@@ -55,12 +55,18 @@ export default {
         };
     },
     methods: {
+        async logout() {
+            localStorage.removeItem("token");
+            localStorage.removeItem("refreshToken");
+            localStorage.removeItem("_id");
+            this.$router.push('/login')
+        },
         async validate() {
             const { valid } = await this.$refs.form.validate()
             if (valid) {
                 const res = await this.user.resetPassword(this.userData)
                 if (res?.code === "ERR_BAD_REQUEST") this.alert = true
-                else this.$router.push({ name: "Login" })
+                else this.logout()
             }
         },
 
