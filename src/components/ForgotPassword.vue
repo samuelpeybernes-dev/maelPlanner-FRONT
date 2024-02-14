@@ -16,7 +16,7 @@
                     Envoi du mail de récupération
                 </v-btn>
                 <v-alert v-model="alert" color="error" icon="$error" title="Oups 🤔"
-                    text="Il semblerait qu'il y ait une erreur"></v-alert>
+                    text="Il semblerait que tu te soit trompé d'email"></v-alert>
             </v-card>
         </v-form>
     </div>
@@ -55,7 +55,9 @@ export default {
             const { valid } = await this.$refs.form.validate()
             if (valid) {
                 const res = await this.user.resetPasswordRequest(this.email)
-                if (res?.code === "ERR_BAD_REQUEST") this.alert = true
+                console.log("🚀 ~ validate ~ res?.code:", res?.code)
+
+                if (res?.code === "ERR_BAD_RESPONSE") this.alert = true
                 else this.$router.push('/login')
             }
         },
