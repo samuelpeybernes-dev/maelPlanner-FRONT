@@ -38,6 +38,9 @@
                             <v-list-item title="Email">{{
                                 this.store.user.email
                             }}</v-list-item>
+                            <v-btn class="ml-3" color="grey" v-on:click="resetPassword">
+                                Changer le mot de passe
+                            </v-btn>
                             <v-btn class="ml-3" color="red" v-on:click="logout">
                                 Déconnexion
                             </v-btn>
@@ -123,6 +126,9 @@ export default {
             localStorage.removeItem("refreshToken");
             localStorage.removeItem("_id");
             this.$router.push('/login')
+        },
+        async resetPassword() {
+            this.store.resetPasswordRequest(this.store.user.email);
         },
     },
     async beforeCreate() {

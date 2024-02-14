@@ -17,6 +17,12 @@
     <v-btn class="m-0.5" color="#c026d3" icon="mdi-arrow-right" v-on:click="navigateNext"></v-btn>
     <popupMenu class="m-0.5" v-on:generated="addRandomScheduleClass"
       v-on:getPreviousScheduleClass="getPreviousScheduleClass" :showPrevious="showPrevious"></popupMenu>
+    <v-dialog width="500" v-model="isBirthday">
+      <v-card>
+        <v-card-title class="mx-auto ">Joyeux anniversaire {{ this.userStore.user.firstName }} !</v-card-title>
+      </v-card>
+    </v-dialog>
+
   </div>
 </template>
 
@@ -32,6 +38,7 @@ import { scheduleJob } from '../store/scheduleJob';
 import { scheduleClass } from '../store/scheduleClass';
 import { hoursSubject } from '../store/hoursSubject';
 import { user } from "../store/user";
+import birthdayAudio from "../assets/22-taylor-swift.mp3"
 export default {
   components: {
     DayPilotCalendar,
@@ -56,6 +63,7 @@ export default {
   name: 'Calendar',
   data() {
     return {
+      isBirthday: false,
       isLoading: false,
       config: {
         locale: 'fr-fr',
@@ -93,9 +101,43 @@ export default {
         validated: false,
       },
       selectedTimeRangeArgs: null,
+      birthdayAudio: new Audio(birthdayAudio),
     };
   },
+  watch: {
+    isBirthday(newVal) {
+      if (!newVal) {
+        this.$confetti.stop();
+        this.birthdayAudio.pause();
+      }
+    },
+  },
   methods: {
+    startBirthday() {
+      this.birthdayAudio.play();
+      this.$confetti.start();
+      this.isBirthday = true;
+      setTimeout(() => {
+        this.$confetti.stop();
+        this.isBirthday = false;
+        this.birthdayAudio.pause();
+      }, 30000);
+    },
+    isBirthdayToday() {
+      const today = new Date()
+      const day = today.getDate();
+      const month = today.getMonth() + 1;
+
+      const userBirthday = this.userStore.user.birthday;
+      const birthdayDate = new Date(userBirthday);
+      const userDay = birthdayDate.getDate();
+      const userMonth = birthdayDate.getMonth() + 1;
+
+      userMonth === month && userDay === day;
+      if (userMonth === month && userDay === day) {
+        this.startBirthday();
+      }
+    },
     validateProfil(customElement) {
       this.userData = customElement;
     },
@@ -446,6 +488,8 @@ export default {
 
 
   mounted: async function () {
+    await this.userStore.fetchUserProfil()
+    this.isBirthdayToday()
     this.isLoading = true;
     await this.loadEvents();
     this.calendar.update({ events: this.combinedEvents });
