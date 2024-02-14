@@ -15,7 +15,7 @@
                     <v-toolbar-title>Profil</v-toolbar-title>
                     <v-spacer></v-spacer>
                     <v-toolbar-items>
-                        <v-btn variant="text" v-on:click="validate"> Enregistrer </v-btn>
+                        <v-btn v-bind="false" variant="text" v-on:click="validate"> Enregistrer </v-btn>
                     </v-toolbar-items>
                 </v-toolbar>
                 <v-tabs v-model="tab" bg-color="#c026d3">
@@ -38,9 +38,15 @@
                             <v-list-item title="Email">{{
                                 this.store.user.email
                             }}</v-list-item>
-                            <v-btn class="ml-3" color="grey" v-on:click="resetPassword">
+                            
+                            <v-btn v-if="!isPasswordRequest" class="ml-3" color="grey" v-on:click="resetPassword">
                                 Changer le mot de passe
                             </v-btn>
+                            <div class="d-inline-block pl-[16px]" v-else >
+                                Mail de reinitialisation envoyé
+                                <v-icon icon="mdi-check-circle" color="green"></v-icon>
+                            </div>
+
                             <v-btn class="ml-3" color="red" v-on:click="logout">
                                 Déconnexion
                             </v-btn>
@@ -102,6 +108,7 @@ export default {
             dialogLocal: false,
             customElement,
             tab: null,
+            isPasswordRequest: false,
         };
     },
 
@@ -128,6 +135,7 @@ export default {
             this.$router.push('/login')
         },
         async resetPassword() {
+            this.isPasswordRequest = true;
             this.store.resetPasswordRequest(this.store.user.email);
         },
     },
