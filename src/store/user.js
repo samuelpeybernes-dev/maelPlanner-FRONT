@@ -95,10 +95,13 @@ export const user = defineStore("user", {
         const body = {
           email: email,
         };
-        await axiosNoAuth.post(`/guest/resetPasswordRequest`, body);
+        const resp = await axiosNoAuth.post(
+          `/guest/resetPasswordRequest`,
+          body
+        );
+        return resp;
       } catch (error) {
-        alert(error);
-        console.log(error);
+        return error;
       }
     },
     async resetPassword(userData) {
@@ -108,10 +111,10 @@ export const user = defineStore("user", {
           token: userData.token,
           password: userData.password,
         };
-        await axiosAuth.post(`/user/resetPassword`, body);
+        const resp = await axiosAuth.post(`/user/resetPassword`, body);
+        return resp;
       } catch (error) {
-        alert(error);
-        console.log(error);
+        return error;
       }
     },
   },

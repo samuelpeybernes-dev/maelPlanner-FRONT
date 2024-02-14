@@ -65,7 +65,7 @@ export default {
             const { valid } = await this.$refs.form.validate()
             if (valid) {
                 const res = await this.user.resetPassword(this.userData)
-                if (res?.code === "ERR_BAD_REQUEST") this.alert = true
+                if (res?.code === "ERR_BAD_RESPONSE") this.alert = true
                 else this.logout()
             }
         },

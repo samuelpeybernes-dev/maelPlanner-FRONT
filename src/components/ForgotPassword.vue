@@ -55,8 +55,6 @@ export default {
             const { valid } = await this.$refs.form.validate()
             if (valid) {
                 const res = await this.user.resetPasswordRequest(this.email)
-                console.log("🚀 ~ validate ~ res?.code:", res?.code)
-
                 if (res?.code === "ERR_BAD_RESPONSE") this.alert = true
                 else this.$router.push('/login')
             }
