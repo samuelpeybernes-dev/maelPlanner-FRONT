@@ -93,7 +93,9 @@ export const user = defineStore("user", {
     async resetPasswordRequest(email) {
       try {
         const body = {
-          email: email,
+          userJoi: {
+            email: email,
+          },
         };
         const resp = await axiosNoAuth.post(
           `/guest/resetPasswordRequest`,
@@ -107,9 +109,11 @@ export const user = defineStore("user", {
     async resetPassword(userData) {
       try {
         const body = {
-          userId: userData.userId,
-          token: userData.token,
-          password: userData.password,
+          userJoi: {
+            userId: userData.userId,
+            token: userData.token,
+            password: userData.password,
+          },
         };
         const resp = await axiosAuth.post(`/user/resetPassword`, body);
         return resp;
